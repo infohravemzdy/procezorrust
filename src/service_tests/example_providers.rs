@@ -163,7 +163,6 @@ impl ITermResult for ExampleTermResult {
     }
 }
 
-
 pub(crate) struct TimeshtWorkingConProv {
     pub(crate) provider: ConceptSpecProvider,
 }

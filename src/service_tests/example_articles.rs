@@ -40,8 +40,7 @@ impl TimeshtWorkingArtSpec {
         TimeshtWorkingArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(TimeshtWorkingArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(TimeshtWorkingArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> TimeshtWorkingArtSpec {
@@ -290,8 +289,7 @@ impl HealthInsbaseArtSpec {
         HealthInsbaseArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(HealthInsbaseArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(HealthInsbaseArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> HealthInsbaseArtSpec {
@@ -336,8 +334,7 @@ impl SocialInsbaseArtSpec {
         SocialInsbaseArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(SocialInsbaseArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(SocialInsbaseArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> SocialInsbaseArtSpec {
@@ -382,8 +379,7 @@ impl HealthInspaymArtSpec {
         HealthInspaymArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(HealthInspaymArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(HealthInspaymArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> HealthInspaymArtSpec {
@@ -428,8 +424,7 @@ impl SocialInspaymArtSpec {
         SocialInspaymArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(SocialInspaymArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(SocialInspaymArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> SocialInspaymArtSpec {
@@ -474,8 +469,7 @@ impl TaxingAdvbaseArtSpec {
         TaxingAdvbaseArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(TaxingAdvbaseArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(TaxingAdvbaseArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> TaxingAdvbaseArtSpec {
@@ -520,8 +514,7 @@ impl TaxingAdvpaymArtSpec {
         TaxingAdvpaymArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(TaxingAdvpaymArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(TaxingAdvpaymArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> TaxingAdvpaymArtSpec {
@@ -566,8 +559,7 @@ impl IncomeGrossArtSpec {
         IncomeGrossArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(IncomeGrossArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(IncomeGrossArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> IncomeGrossArtSpec {
@@ -612,8 +604,7 @@ impl IncomeNettoArtSpec {
         IncomeNettoArtSpec {
             spec: ArticleSpec::new(
                 _code,
-                ConceptCode::get(IncomeNettoArtSpec::CONCEPT_CODE),
-                vec![]),
+                ConceptCode::get(IncomeNettoArtSpec::CONCEPT_CODE), vec![]),
         }
     }
     fn new() -> IncomeNettoArtSpec {
