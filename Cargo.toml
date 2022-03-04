@@ -19,4 +19,4 @@ include = [
 rust_decimal = "1.16"
 rust_decimal_macros = "1.16"
 queues = "1.0.2"
-legalios = "0.0.12"
+legalios = "0.22.2"
