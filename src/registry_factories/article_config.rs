@@ -4,6 +4,8 @@ use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::version_code::VersionCode;
 use crate::service_types::article_define::{ArticleDefine, IArticleDefine};
 use crate::registry_providers::article_provider::{ArticleSpec, ArticleSpecProvider, IArticleSpec, IArticleSpecProvider};
+use crate::service_types::article_seqs::ArticleSeqs;
+use crate::service_types::article_term::ArticleTerm;
 
 #[derive(Debug, Clone)]
 pub(crate) struct ArticleSpecConfig {
@@ -14,8 +16,14 @@ impl IArticleDefine for ArticleSpecConfig {
     fn get_code(&self) -> ArticleCode {
         self.spec.get_code()
     }
+    fn get_seqs(&self) -> ArticleSeqs {
+        self.spec.get_seqs()
+    }
     fn get_role(&self) -> ConceptCode {
         self.spec.get_role()
+    }
+    fn get_term(&self) -> ArticleTerm {
+        self.spec.get_term()
     }
 }
 
@@ -31,9 +39,11 @@ impl IArticleSpec for ArticleSpecConfig {
 
 #[allow(dead_code)]
 impl ArticleSpecConfig {
-    fn new(_code: i32, _role: i32, _sums: Vec<i32>) -> ArticleSpecConfig {
+    fn new(_code: i32, _seqs: i16, _role: i32, _sums: Vec<i32>) -> ArticleSpecConfig {
         ArticleSpecConfig {
-            spec: ArticleSpec::new(ArticleCode::get(_code), ConceptCode::get(_role),
+            spec: ArticleSpec::new(ArticleCode::get(_code),
+                                   ArticleSeqs::get(_seqs),
+                                   ConceptCode::get(_role),
                                    ArticleSpec::const_to_sums_array(_sums)),
         }
     }
@@ -49,17 +59,18 @@ pub(crate) struct ArticleProviderConfig {
 
 #[allow(dead_code)]
 impl ArticleProviderConfig {
-    pub(crate) fn new(article: i32, concept: i32, sums: Vec<i32>) -> ArticleProviderConfig {
+    pub(crate) fn new(article: i32, sequens: i16, concept: i32, sums: Vec<i32>) -> ArticleProviderConfig {
         ArticleProviderConfig {
             spec: ArticleSpecProvider::new(ArticleCode::get(article)),
-            article_spec: ArticleSpecConfig::new(article, concept, sums.to_vec()),
+            article_spec: ArticleSpecConfig::new(article, sequens, concept, sums.to_vec()),
         }
     }
-    fn get_spec_config(article: &ArticleCode, concept: &ConceptCode, sums: Vec<ArticleCode>) -> ArticleProviderConfig {
-        ArticleProviderConfig::new(article.get_value(), concept.get_value(), ArticleSpecConfig::specs_to_number_sums(sums))
+    fn get_spec_config(article: &ArticleCode, sequens: &ArticleSeqs, concept: &ConceptCode, sums: Vec<ArticleCode>) -> ArticleProviderConfig {
+        ArticleProviderConfig::new(article.get_value(), sequens.get_value(), concept.get_value(),
+                                   ArticleSpecConfig::specs_to_number_sums(sums))
     }
-    fn get_const_config(article: i32, concept: i32, sums: Vec<i32>) -> ArticleProviderConfig {
-        ArticleProviderConfig::new(article, concept, sums)
+    fn get_const_config(article: i32, sequens: i16, concept: i32, sums: Vec<i32>) -> ArticleProviderConfig {
+        ArticleProviderConfig::new(article, sequens, concept, sums)
     }
 }
 

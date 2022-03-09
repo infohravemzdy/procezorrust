@@ -1,5 +1,4 @@
 pub(crate) mod example_constants;
-pub(crate) mod example_articles;
 pub(crate) mod example_results;
 pub(crate) mod example_providers;
 pub(crate) mod example_service;

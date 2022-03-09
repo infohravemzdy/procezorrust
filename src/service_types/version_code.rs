@@ -21,6 +21,9 @@ impl Eq for VersionCode {
 }
 
 impl VersionCode {
+    pub(crate) fn zero() -> VersionCode {
+        VersionCode::new()
+    }
     pub(crate) fn new() -> VersionCode {
         VersionCode { value: 0 }
     }

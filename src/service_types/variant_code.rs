@@ -22,6 +22,9 @@ impl Eq for VariantCode {
 
 #[allow(dead_code)]
 impl VariantCode {
+    pub(crate) fn zero() -> VariantCode {
+        VariantCode::new()
+    }
     pub(crate) fn new() -> VariantCode {
         VariantCode { value: 0 }
     }

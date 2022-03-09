@@ -8,6 +8,8 @@ use crate::registry_constants::article_consts::ArticleConst;
 use crate::registry_constants::concept_consts::ConceptConst;
 use crate::registry_factories::article_config::ArticleProviderConfig;
 use crate::registry_providers::article_provider::{ArticleSpec, ArticleSpecProvider, BoxArticleSpec, BoxArticleSpecProvider, IArticleSpec, IArticleSpecProvider};
+use crate::service_types::article_seqs::ArticleSeqs;
+use crate::service_types::article_term::ArticleTerm;
 
 type MapArticleCode = i32;
 
@@ -19,9 +21,18 @@ impl IArticleDefine for NotFoundArticleSpec {
     fn get_code(&self) -> ArticleCode {
         self.spec.get_code()
     }
+
+    fn get_seqs(&self) -> ArticleSeqs {
+        self.spec.get_seqs()
+    }
+
     fn get_role(&self) -> ConceptCode {
         self.spec.get_role()
     }
+    fn get_term(&self) -> ArticleTerm {
+        self.spec.get_term()
+    }
+
 }
 
 impl IArticleSpec for NotFoundArticleSpec {
@@ -40,6 +51,7 @@ impl NotFoundArticleSpec {
         NotFoundArticleSpec {
             spec: ArticleSpec::new(
                 _code,
+                ArticleSeqs::zero(),
                 ConceptCode::get(concept_code), vec![]),
         }
     }
@@ -76,14 +88,16 @@ impl NotFoundArticleProvider {
 
 pub(crate) struct ProviderRecord {
     article: i32,
+    sequens: i16,
     concept: i32,
     sums: Vec<i32>,
 }
 
 impl ProviderRecord {
-    pub fn new(_article: i32, _concept: i32, _sums: Vec<i32>) -> ProviderRecord {
+    pub fn new(_article: i32, _sequens: i16, _concept: i32, _sums: Vec<i32>) -> ProviderRecord {
         ProviderRecord {
             article: _article,
+            sequens: _sequens,
             concept: _concept,
             sums: _sums.to_vec(),
         }
@@ -138,7 +152,7 @@ impl ArticleSpecFactory {
 
     pub(crate) fn build_providers_from_records(records: Vec<ProviderRecord>) -> Vec<BoxArticleSpecProvider> {
         let providers: Vec<BoxArticleSpecProvider> = records.into_iter()
-            .map(|x| Box::new(ArticleProviderConfig::new(x.article, x.concept, x.sums)) as BoxArticleSpecProvider).collect();
+            .map(|x| Box::new(ArticleProviderConfig::new(x.article, x.sequens, x.concept, x.sums)) as BoxArticleSpecProvider).collect();
 
         providers
     }

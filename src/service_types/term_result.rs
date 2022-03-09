@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use crate::registry_providers::article_provider::{ArticleSpec, BoxArticleSpec};
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::contract_code::ContractCode;
@@ -9,18 +10,10 @@ use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::{ArcTermTarget};
 use crate::service_errors::term_result_error::TermResultError;
 
-pub(crate) trait IResultConst {
-    const VALUE_ZERO: i32;
-    const BASIS_ZERO: i32;
-    const DESCRIPTION_EMPTY: &'static str;
-}
-
 pub(crate) trait ITermResult : ITermSymbol {
     fn get_target(&self) -> ArcTermTarget;
+    fn get_spec(&self) -> Option<BoxArticleSpec>;
     fn get_concept(&self) -> ConceptCode;
-    fn get_result_descr(&self) -> String;
-    fn get_result_basis(&self) -> i32;
-    fn get_result_value(&self) -> i32;
     fn get_concept_descr(&self) -> String;
 }
 
@@ -32,27 +25,20 @@ pub(crate) type ResultArcTermResultList = Vec<ResultArcTermResult>;
 
 pub(crate) struct TermResult {
     target: ArcTermTarget,
+    spec : Option<BoxArticleSpec>,
     month_code: MonthCode,
     contract: ContractCode,
     position: PositionCode,
     variant: VariantCode,
     article: ArticleCode,
     concept: ConceptCode,
-    result_value: i32,
-    result_basis: i32,
-    result_descr: String,
-}
-
-impl IResultConst for TermResult {
-    const VALUE_ZERO: i32 = 0;
-    const BASIS_ZERO: i32 = 0;
-    const DESCRIPTION_EMPTY: &'static str = "";
 }
 
 impl ITermSymbol for TermResult {
     fn is_null(&self) -> bool {
         self.article.get_value()==0
     }
+
     fn get_month_code(&self) -> MonthCode {
         self.month_code
     }
@@ -72,6 +58,7 @@ impl ITermSymbol for TermResult {
     fn get_article(&self) -> ArticleCode {
         self.article
     }
+
     fn get_article_descr(&self) -> String {
         format!("ArticleCode for {}", self.article.value)
     }
@@ -82,20 +69,10 @@ impl ITermResult for TermResult {
         self.target.clone()
     }
 
+    fn get_spec(&self) -> Option<BoxArticleSpec> { self.spec }
+
     fn get_concept(&self) -> ConceptCode {
         self.concept
-    }
-
-    fn get_result_descr(&self) -> String {
-        self.result_descr.clone()
-    }
-
-    fn get_result_basis(&self) -> i32 {
-        self.result_basis
-    }
-
-    fn get_result_value(&self) -> i32 {
-        self.result_value
     }
 
     fn get_concept_descr(&self) -> String {
@@ -104,7 +81,7 @@ impl ITermResult for TermResult {
 }
 
 impl TermResult {
-    pub(crate) fn new(_target: ArcTermTarget, _value: i32,  _basis: i32, _descr: &str) -> TermResult {
+    pub(crate) fn new(_target: ArcTermTarget, _spec: Option<BoxArticleSpec>) -> TermResult {
         let _month: MonthCode = _target.get_month_code().clone();
         let _contract: ContractCode = _target.get_contract().clone();
         let _position: PositionCode = _target.get_position().clone();
@@ -114,15 +91,13 @@ impl TermResult {
 
         TermResult {
             target: _target,
+            spec: _spec,
             month_code: _month,
             contract: _contract,
             position: _position,
             variant: _variant,
             article: _article,
             concept: _concept,
-            result_value: _value,
-            result_basis: _basis,
-            result_descr: String::from(_descr),
         }
     }
 }
@@ -165,20 +140,12 @@ macro_rules! impl_result_term {
                 self.$p.get_target()
             }
 
+            fn get_spec(&self) -> Option<BoxArticleSpec> {
+                self.$p.get_spec()
+            }
+
             fn get_concept(&self) -> ConceptCode {
                 self.$p.get_concept()
-            }
-
-            fn get_result_descr(&self) -> String {
-                self.$p.get_result_descr()
-            }
-
-            fn get_result_basis(&self) -> i32 {
-                self.$p.get_result_basis()
-            }
-
-            fn get_result_value(&self) -> i32 {
-                self.$p.get_result_value()
             }
 
             fn get_concept_descr(&self) -> String {

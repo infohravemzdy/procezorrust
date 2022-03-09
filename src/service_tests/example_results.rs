@@ -6,7 +6,8 @@ use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
 use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::ArcTermTarget;
-use crate::service_types::term_result::{IResultConst, ITermResult, TermResult};
+use crate::registry_providers::article_provider::BoxArticleSpec;
+use crate::service_types::term_result::{ITermResult, TermResult};
 
 pub(crate) struct TimeshtWorkingResult {
     term: TermResult,
@@ -14,17 +15,9 @@ pub(crate) struct TimeshtWorkingResult {
 
 #[allow(dead_code)]
 impl TimeshtWorkingResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> TimeshtWorkingResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> TimeshtWorkingResult {
         TimeshtWorkingResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> TimeshtWorkingResult {
-        TimeshtWorkingResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -37,17 +30,9 @@ pub(crate) struct AmountBasisResult {
 
 #[allow(dead_code)]
 impl AmountBasisResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> AmountBasisResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> AmountBasisResult {
         AmountBasisResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> AmountBasisResult {
-        AmountBasisResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -60,17 +45,9 @@ pub(crate) struct AmountFixedResult {
 
 #[allow(dead_code)]
 impl AmountFixedResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> AmountFixedResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> AmountFixedResult {
         AmountFixedResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> AmountFixedResult {
-        AmountFixedResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -83,17 +60,9 @@ pub(crate) struct HealthInsbaseResult {
 
 #[allow(dead_code)]
 impl HealthInsbaseResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> HealthInsbaseResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> HealthInsbaseResult {
         HealthInsbaseResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> HealthInsbaseResult {
-        HealthInsbaseResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -106,17 +75,9 @@ pub(crate) struct SocialInsbaseResult {
 
 #[allow(dead_code)]
 impl SocialInsbaseResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> SocialInsbaseResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> SocialInsbaseResult {
         SocialInsbaseResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> SocialInsbaseResult {
-        SocialInsbaseResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -129,17 +90,9 @@ pub(crate) struct HealthInspaymResult {
 
 #[allow(dead_code)]
 impl HealthInspaymResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> HealthInspaymResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> HealthInspaymResult {
         HealthInspaymResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> HealthInspaymResult {
-        HealthInspaymResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -152,17 +105,9 @@ pub(crate) struct SocialInspaymResult {
 
 #[allow(dead_code)]
 impl SocialInspaymResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> SocialInspaymResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> SocialInspaymResult {
         SocialInspaymResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> SocialInspaymResult {
-        SocialInspaymResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -175,17 +120,9 @@ pub(crate) struct TaxingAdvbaseResult {
 
 #[allow(dead_code)]
 impl TaxingAdvbaseResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> TaxingAdvbaseResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> TaxingAdvbaseResult {
         TaxingAdvbaseResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> TaxingAdvbaseResult {
-        TaxingAdvbaseResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -198,17 +135,9 @@ pub(crate) struct TaxingAdvpaymResult {
 
 #[allow(dead_code)]
 impl TaxingAdvpaymResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> TaxingAdvpaymResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> TaxingAdvpaymResult {
         TaxingAdvpaymResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> TaxingAdvpaymResult {
-        TaxingAdvpaymResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -221,17 +150,9 @@ pub(crate) struct IncomeGrossResult {
 
 #[allow(dead_code)]
 impl IncomeGrossResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> IncomeGrossResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> IncomeGrossResult {
         IncomeGrossResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> IncomeGrossResult {
-        IncomeGrossResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }
@@ -244,17 +165,9 @@ pub(crate) struct IncomeNettoResult {
 
 #[allow(dead_code)]
 impl IncomeNettoResult {
-    pub(crate) fn new(target: ArcTermTarget, value: i32, basis: i32, descr: &str) -> IncomeNettoResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> IncomeNettoResult {
         IncomeNettoResult {
-            term: TermResult::new(target, value, basis, descr),
-        }
-    }
-    pub(crate) fn empty(_target: ArcTermTarget) -> IncomeNettoResult {
-        IncomeNettoResult {
-            term: TermResult::new(_target,
-                                  TermResult::VALUE_ZERO,
-                                  TermResult::BASIS_ZERO,
-                                  TermResult::DESCRIPTION_EMPTY),
+            term: TermResult::new(target, spec),
         }
     }
 }

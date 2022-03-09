@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use legalios::service::bundle_props::IBundleProps;
 use legalios::service::period::IPeriod;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
@@ -6,6 +7,11 @@ use crate::service_types::concept_define::IConceptDefine;
 use crate::service_types::version_code::VersionCode;
 use crate::registry_constants::concept_consts::ConceptConst;
 use crate::registry_providers::concept_provider::{BoxConceptSpec, BoxConceptSpecProvider, ConceptSpec, ConceptSpecProvider, IConceptSpec, IConceptSpecProvider, ResultFunc};
+use crate::service_types::contract_term::ArcContractTermList;
+use crate::service_types::month_code::MonthCode;
+use crate::service_types::position_term::ArcPositionTermList;
+use crate::service_types::term_target::ArcTermTargetList;
+use crate::service_types::variant_code::VariantCode;
 
 type MapConceptCode = i32;
 
@@ -38,6 +44,12 @@ impl IConceptSpec for NotFoundConceptSpec {
 
     fn get_result_delegate(&self) -> Option<ResultFunc> {
         self.spec.get_result_delegate()
+    }
+
+    fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, ruleset: &dyn IBundleProps, month: &MonthCode,
+                           contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
+                           targets: &ArcTermTargetList, vars: VariantCode) -> ArcTermTargetList {
+        self.default_target_list(article, period, ruleset, month, contract_terms, position_terms, targets, vars)
     }
 }
 

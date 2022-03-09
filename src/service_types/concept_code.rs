@@ -21,6 +21,9 @@ impl Eq for ConceptCode {
 }
 
 impl ConceptCode {
+    pub(crate) fn zero() -> ConceptCode {
+        ConceptCode::new()
+    }
     pub(crate) fn new() -> ConceptCode {
         ConceptCode { value: 0 }
     }

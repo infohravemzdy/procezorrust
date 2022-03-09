@@ -45,6 +45,54 @@ impl TermResultError {
             period: Period::get(period.get_code()),
         }
     }
+    pub(crate) fn invalid_result_error(period: &dyn IPeriod, target: &ArcTermTarget, type_descr: String) -> TermResultError {
+        TermResultError {
+            message: format!("invalid result type {} error!", type_descr),
+            target: target.clone(),
+            period: Period::get(period.get_code()),
+        }
+    }
+    pub(crate) fn invalid_ruleset_error(period: &dyn IPeriod, target: &ArcTermTarget, type_descr: String) -> TermResultError {
+        TermResultError {
+            message: format!("invalid {} Ruleset error!", type_descr),
+            target: target.clone(),
+            period: Period::get(period.get_code()),
+        }
+    }
+    pub(crate) fn invalid_target_error(period: &dyn IPeriod, target: &ArcTermTarget, type_descr: String) -> TermResultError {
+        TermResultError {
+            message: format!("invalid target type {} error!", type_descr),
+            target: target.clone(),
+            period: Period::get(period.get_code()),
+        }
+    }
+    pub(crate) fn no_result_found_error(period: &dyn IPeriod, target: &ArcTermTarget, article_descr: String,
+                                        contract: &ContractCode, position: &PositionCode) -> TermResultError {
+        TermResultError {
+            message: format!("result for {}{} Not Found", article_descr, TermResultError::messageContractPosition(contract, position)),
+            target: target.clone(),
+            period: Period::get(period.get_code()),
+        }
+    }
+
+    pub(crate) fn null_result_found_error(period: &dyn IPeriod, target: &ArcTermTarget, article_descr: String,
+                                          contract: &ContractCode, position: &PositionCode) -> TermResultError {
+        TermResultError {
+            message: format!("result found for {}{} but Instance is Null!", article_descr, TermResultError::messageContractPosition(contract, position)),
+            target: target.clone(),
+            period: Period::get(period.get_code()),
+        }
+    }
+
+    fn messageContractPosition(contract: &ContractCode, position: &PositionCode) -> String {
+        return if contract.is_valid() && position.is_valid() {
+            format!(", contract={}, position={}", contract.get_value(), position.get_value())
+        } else if contract.is_valid() {
+            format!(", contract={}", contract.get_value())
+        } else {
+            String::from("")
+        }
+    }
 }
 
 impl Clone for TermResultError {
@@ -90,18 +138,6 @@ impl ITermSymbol for TermResultError {
 impl ITermTarget for TermResultError {
     fn get_concept(&self) -> ConceptCode {
         self.target.get_concept()
-    }
-
-    fn get_target_basis(&self) -> i32 {
-        self.target.get_target_basis()
-    }
-
-    fn get_target_descr(&self) -> String {
-        self.target.get_target_descr()
-    }
-
-    fn get_defs(&self) -> ArticleDefine {
-        self.target.get_defs()
     }
 
     fn get_concept_descr(&self) -> String {

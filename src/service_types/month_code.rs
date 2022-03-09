@@ -22,6 +22,9 @@ impl Eq for MonthCode {
 
 #[allow(dead_code)]
 impl MonthCode {
+    pub(crate) fn zero() -> MonthCode {
+        MonthCode::new()
+    }
     pub(crate) fn new() -> MonthCode {
         MonthCode { value: 0 }
     }

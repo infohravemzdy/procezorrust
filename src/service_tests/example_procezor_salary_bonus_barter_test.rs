@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod service_example_tests {
     use std::sync::Arc;
-    use legalios::factories::bundle_props::BundleProps;
     use legalios::service::period::{IPeriod, Period};
+    use legalios::service::bundle_props::{BundleProps};
     use crate::service_types::article_code::ArticleCode;
     use crate::service_types::concept_code::ConceptCode;
     use crate::service_types::contract_code::ContractCode;
@@ -48,10 +48,8 @@ mod service_example_tests {
         let test_version = VersionCode::get(example_version);
         let test_period = Period::get_with_year_month(2021, 1);
 
-        let test_findef = ArticleDefine::get(
-            ExampleArticleConst::ArticleIncomeNetto as i32,
-            ExampleConceptConst::ConceptIncomeNetto as i32);
-        let mut test_service = ExampleService::new(example_version, &test_findef);
+        let test_calc_arts = vec!(ArticleCode::get(ExampleArticleConst::ArticleIncomeNetto as i32));
+        let mut test_service = ExampleService::new(example_version, &test_calc_arts);
         let test_ruleset = BundleProps::empty(&test_period);
 
         let factory_article_code = ArticleCode::get(ExampleArticleConst::ArticleTimeshtWorking as i32);

@@ -1,9 +1,12 @@
+use std::sync::Arc;
 use legalios::service::period::IPeriod;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::version_code::VersionCode;
 use crate::service_types::article_define::{ArticleDefine, IArticleDefine};
 use crate::registry_constants::concept_consts::ConceptConst;
+use crate::service_types::article_seqs::ArticleSeqs;
+use crate::service_types::article_term::ArticleTerm;
 
 pub(crate) trait IArticleSpecConst {
     const CONCEPT_CODE: i32;
@@ -14,21 +17,24 @@ pub(crate) trait IArticleSpec : IArticleDefine {
     fn get_defs(&self) -> ArticleDefine;
 }
 
+pub(crate) type ArcArticleSpec = Arc<dyn IArticleSpec>;
 pub(crate) type BoxArticleSpec = Box<dyn IArticleSpec>;
 pub(crate) type BoxArticleSpecList = Vec<BoxArticleSpec>;
 
 #[derive(Debug, Clone)]
 pub(crate) struct ArticleSpec {
     pub(crate) code: ArticleCode,
+    pub(crate) seqs: ArticleSeqs,
     pub(crate) role: ConceptCode,
     sums: Vec<ArticleCode>,
 }
 
 #[allow(dead_code)]
 impl ArticleSpec {
-    pub(crate) fn new(_code: ArticleCode, _role: ConceptCode, _sums: Vec<ArticleCode>) -> ArticleSpec {
+    pub(crate) fn new(_code: ArticleCode, _seqs: ArticleSeqs, _role: ConceptCode, _sums: Vec<ArticleCode>) -> ArticleSpec {
         ArticleSpec {
             code: _code,
+            seqs: _seqs,
             role: _role,
             sums: _sums.to_vec(),
         }
@@ -46,8 +52,14 @@ impl IArticleDefine for ArticleSpec {
     fn get_code(&self) -> ArticleCode {
         self.code
     }
+    fn get_seqs(&self) -> ArticleSeqs {
+        self.seqs
+    }
     fn get_role(&self) -> ConceptCode {
         self.role
+    }
+    fn get_term(&self) -> ArticleTerm {
+        ArticleTerm::get(self.code.get_value(), self.seqs.get_value())
     }
 }
 
@@ -57,7 +69,7 @@ impl IArticleSpec for ArticleSpec {
     }
 
     fn get_defs(&self) -> ArticleDefine {
-        ArticleDefine::get(self.code.get_value(), self.role.get_value())
+        ArticleDefine::get(self.code.get_value(), self.seqs.get_value(), self.role.get_value())
     }
 }
 
@@ -83,7 +95,7 @@ impl IArticleSpecProvider for ArticleSpecProvider {
 
     fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Box<dyn IArticleSpec> {
         let concept = ConceptCode::get(ConceptConst::ConceptNotfound as i32);
-        Box::new(ArticleSpec::new(self.code,concept, vec![]))
+        Box::new(ArticleSpec::new(self.code, ArticleSeqs::zero(),concept, vec![]))
     }
 }
 
@@ -103,14 +115,24 @@ macro_rules! impl_article_spec {
             fn get_code(&self) -> ArticleCode {
                 self.$s.get_code()
             }
+            fn get_seqs(&self) -> ArticleSeqs {
+                self.$s.get_seqs()
+            }
             fn get_role(&self) -> ConceptCode {
                 self.$s.get_role()
+            }
+            fn get_term(&self) -> ArticleTerm {
+                self.$s.get_term()
             }
         }
 
         impl IArticleSpec for $t {
             fn get_sums(&self) -> Vec<ArticleCode> {
                 self.$s.get_sums()
+            }
+
+            fn get_term(&self) -> ArticleTerm {
+                self.$s.get_term()
             }
 
             fn get_defs(&self) -> ArticleDefine {

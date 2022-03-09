@@ -1,6 +1,6 @@
 [package]
 name = "procezor"
-version = "0.0.1"
+version = "0.22.1"
 edition = "2018"
 description = "Salary, Health, Social, Taxing Properties for years 2011-2022"
 documentation = "https://mzdyhrave.github.io/payrolldocs/"
@@ -19,4 +19,5 @@ include = [
 rust_decimal = "1.16"
 rust_decimal_macros = "1.16"
 queues = "1.0.2"
+chrono = "0.4"
 legalios = "0.22.2"

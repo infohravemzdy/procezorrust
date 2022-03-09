@@ -10,9 +10,6 @@ use crate::service_types::term_symbol::ITermSymbol;
 
 pub(crate) trait ITermTarget : ITermSymbol {
     fn get_concept(&self) -> ConceptCode;
-    fn get_target_basis(&self) -> i32;
-    fn get_target_descr(&self) -> String;
-    fn get_defs(&self) -> ArticleDefine;
     fn get_concept_descr(&self) -> String;
 }
 
@@ -28,8 +25,6 @@ pub(crate) struct TermTarget {
     variant: VariantCode,
     article: ArticleCode,
     concept: ConceptCode,
-    target_basis: i32,
-    target_descr: String,
 }
 
 impl ITermSymbol for TermTarget {
@@ -67,18 +62,6 @@ impl ITermTarget for TermTarget {
         self.concept
     }
 
-    fn get_target_basis(&self) -> i32 {
-        self.target_basis
-    }
-
-    fn get_target_descr(&self) -> String {
-        self.target_descr.clone()
-    }
-
-    fn get_defs(&self) -> ArticleDefine {
-        ArticleDefine::get(self.get_article().get_value(), self.get_concept().get_value())
-    }
-
     fn get_concept_descr(&self) -> String {
         format!("ConceptCode for {}", self.concept.value)
     }
@@ -87,7 +70,7 @@ impl ITermTarget for TermTarget {
 #[allow(dead_code)]
 impl TermTarget {
     pub(crate) fn new(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
-                      article: &ArticleCode, concept: &ConceptCode, _basis: i32, _descr: &str) -> TermTarget {
+                      article: &ArticleCode, concept: &ConceptCode) -> TermTarget {
         TermTarget {
             month_code: month.clone(),
             contract: contract.clone(),
@@ -95,13 +78,11 @@ impl TermTarget {
             variant: variant.clone(),
             article: article.clone(),
             concept: concept.clone(),
-            target_basis: _basis,
-            target_descr: String::from(_descr),
         }
     }
     pub(crate) fn zero_value(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
                       article: &ArticleCode, concept: &ConceptCode) -> TermTarget {
-        TermTarget::new(month, contract, position, variant, article, concept, 0, "")
+        TermTarget::new(month, contract, position, variant, article, concept)
     }
     pub(crate) fn from_target(target: &ArcTermTarget) -> TermTarget {
         TermTarget::new(&target.get_month_code(),
@@ -109,9 +90,7 @@ impl TermTarget {
                         &target.get_position(),
                         &target.get_variant(),
                         &target.get_article(),
-                        &target.get_concept(),
-                        target.get_target_basis(),
-                        &target.get_target_descr())
+                        &target.get_concept())
     }
 }
 
@@ -151,18 +130,6 @@ macro_rules! impl_target_term {
         impl ITermTarget for $t {
             fn get_concept(&self) -> ConceptCode {
                 self.$p.concept
-            }
-
-            fn get_target_basis(&self) -> i32 {
-                self.$p.target_basis
-            }
-
-            fn get_target_descr(&self) -> String {
-                self.$p.target_descr.clone()
-            }
-
-            fn get_defs(&self) -> ArticleDefine {
-                ArticleDefine::get(self.$p.get_article().get_value(), self.$p.get_concept().get_value())
             }
 
             fn get_concept_descr(&self) -> String {

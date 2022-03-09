@@ -22,13 +22,19 @@ impl Eq for ContractCode {
 
 #[allow(dead_code)]
 impl ContractCode {
+    pub(crate) fn zero() -> ContractCode {
+        ContractCode::new()
+    }
     pub(crate) fn new() -> ContractCode {
         ContractCode { value: 0 }
     }
     pub(crate) fn get(_value: i16) -> ContractCode {
         ContractCode { value: _value }
     }
-    fn get_value(&self) -> i16 {
+    pub(crate) fn get_value(&self) -> i16 {
         self.value
+    }
+    pub(crate) fn is_valid(&self) -> bool {
+        self.value != 0
     }
 }

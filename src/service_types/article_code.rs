@@ -21,6 +21,9 @@ impl Eq for ArticleCode {
 }
 
 impl ArticleCode {
+    pub(crate) fn zero() -> ArticleCode {
+        ArticleCode::new()
+    }
     pub(crate) fn new() -> ArticleCode {
         ArticleCode { value: 0 }
     }

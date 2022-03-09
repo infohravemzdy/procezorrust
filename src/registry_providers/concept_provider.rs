@@ -1,18 +1,28 @@
+use std::sync::Arc;
 use legalios::service::period::IPeriod;
-use legalios::factories::bundle_props::IBundleProps;
+use legalios::service::bundle_props::IBundleProps;
+use crate::registry_providers::article_provider::{BoxArticleSpec};
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::month_code::MonthCode;
-use crate::service_types::term_target::{ArcTermTarget};
+use crate::service_types::term_target::{ArcTermTarget, ArcTermTargetList, TermTarget};
 use crate::service_types::version_code::VersionCode;
 use crate::service_types::concept_define::IConceptDefine;
+use crate::service_types::contract_code::ContractCode;
+use crate::service_types::contract_term::ArcContractTermList;
+use crate::service_types::position_code::PositionCode;
+use crate::service_types::position_term::ArcPositionTermList;
 use crate::service_types::term_result::ResultArcTermResultList;
+use crate::service_types::variant_code::VariantCode;
 
-pub(crate) type ResultFunc = fn(target: ArcTermTarget, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
+pub(crate) type ResultFunc = fn(target: ArcTermTarget, _spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
 
 pub(crate) trait IConceptSpec: IConceptDefine {
     fn get_path(&self) -> Vec<ArticleCode>;
     fn get_result_delegate(&self) -> Option<ResultFunc>;
+    fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, _ruleset: &dyn IBundleProps, month: &MonthCode,
+                           contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
+                           targets: &ArcTermTargetList, vars: VariantCode) -> ArcTermTargetList;
 }
 
 pub(crate) trait IConceptSpecConst {
@@ -41,6 +51,18 @@ impl IConceptSpec for ConceptSpec {
 
     fn get_result_delegate(&self) -> Option<ResultFunc> {
         self.result_delegate
+    }
+    fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, _ruleset: &dyn IBundleProps, month: &MonthCode,
+                           _contract_terms: &ArcContractTermList, _position_terms: &ArcPositionTermList,
+                           targets: &ArcTermTargetList, vars: VariantCode) -> ArcTermTargetList {
+
+        let con = ContractCode::zero();
+        let pos = PositionCode::zero();
+
+        if targets.len()!=0 {
+            return vec![];
+        }
+        return vec![Arc::new(TermTarget::new(month, &con, &pos, &vars, &article, &self.code))];
     }
 }
 
@@ -108,6 +130,12 @@ macro_rules! impl_concept_spec {
 
             fn get_result_delegate(&self) -> Option<ResultFunc> {
                 self.$s.get_result_delegate()
+            }
+
+            fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, ruleset: &dyn IBundleProps, month: &MonthCode,
+                           contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
+                           targets: &ArcTermTargetList, vars: VariantCode) -> ArcTermTargetList {
+                self.$s.default_target_list(article, period, ruleset, month, contract_terms, position_terms, targets, vars)
             }
         }
     }

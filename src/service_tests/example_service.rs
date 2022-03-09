@@ -1,9 +1,10 @@
+use std::collections::HashMap;
 use legalios::service::period::IPeriod;
-use legalios::factories::bundle_props::IBundleProps;
+use legalios::service::bundle_props::IBundleProps;
 use crate::service_types::version_code::VersionCode;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
-use crate::service_types::article_define::IArticleDefine;
+use crate::service_types::article_define::{ArticleDefine, IArticleDefine};
 use crate::service_types::term_target::{ArcTermTargetList};
 use crate::service_types::term_result::{ResultArcTermResultList};
 use crate::registry_factories::article_factory::{ArticleSpecFactory, BoxArticleSpecFactory, IArticleSpecFactory, ProviderRecord};
@@ -14,6 +15,8 @@ use crate::service::service_procezor::{IServiceProcezor, ServiceProcezor};
 use crate::service_tests::example_constants::ExampleArticleConst;
 use crate::service_tests::example_constants::ExampleConceptConst;
 use crate::service_tests::example_providers::{AmountBasisConProv, AmountFixedConProv, HealthInsbaseConProv, HealthInspaymConProv, IncomeGrossConProv, IncomeNettoConProv, SocialInsbaseConProv, SocialInspaymConProv, TaxingAdvbaseConProv, TaxingAdvpaymConProv, TimeshtWorkingConProv};
+use crate::service_types::contract_term::ArcContractTermList;
+use crate::service_types::position_term::ArcPositionTermList;
 
 pub(crate) struct ExampleArticleFactory {
     factory: ArticleSpecFactory,
@@ -27,48 +30,49 @@ impl ExampleArticleFactory {
         }
     }
     fn factory_builder() -> Vec<BoxArticleSpecProvider> {
+        let ARTICLE_DEFAULT_SEQUENS: i16 = 0;
         let providers_config = vec![
-            ProviderRecord::new(ExampleArticleConst::ArticleTimeshtWorking as i32, ExampleConceptConst::ConceptTimeshtWorking as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleTimeshtWorking as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptTimeshtWorking as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticlePaymentSalary as i32, ExampleConceptConst::ConceptAmountBasis as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticlePaymentSalary as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptAmountBasis as i32,
                                 vec![
                                     ExampleArticleConst::ArticleIncomeGross as i32,
                                     ExampleArticleConst::ArticleHealthInsbase as i32,
                                     ExampleArticleConst::ArticleSocialInsbase as i32,
                                     ExampleArticleConst::ArticleTaxingAdvbase as i32,
                                 ]),
-            ProviderRecord::new(ExampleArticleConst::ArticlePaymentBonus as i32, ExampleConceptConst::ConceptAmountFixed as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticlePaymentBonus as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptAmountFixed as i32,
                                 vec![
                                     ExampleArticleConst::ArticleIncomeGross as i32,
                                     ExampleArticleConst::ArticleHealthInsbase as i32,
                                     ExampleArticleConst::ArticleSocialInsbase as i32,
                                     ExampleArticleConst::ArticleTaxingAdvbase as i32,
                                 ]),
-            ProviderRecord::new(ExampleArticleConst::ArticlePaymentBarter as i32, ExampleConceptConst::ConceptAmountFixed as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticlePaymentBarter as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptAmountFixed as i32,
                                 vec![
                                     ExampleArticleConst::ArticleHealthInsbase as i32,
                                     ExampleArticleConst::ArticleSocialInsbase as i32,
                                     ExampleArticleConst::ArticleTaxingAdvbase as i32,
                                 ]),
-            ProviderRecord::new(ExampleArticleConst::ArticleAllowceHoffice as i32, ExampleConceptConst::ConceptAmountFixed as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleAllowceHoffice as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptAmountFixed as i32,
                                 vec![
                                     ExampleArticleConst::ArticleIncomeNetto as i32,
                                 ]),
-            ProviderRecord::new(ExampleArticleConst::ArticleHealthInsbase as i32, ExampleConceptConst::ConceptHealthInsbase as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleHealthInsbase as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptHealthInsbase as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleSocialInsbase as i32, ExampleConceptConst::ConceptSocialInsbase as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleSocialInsbase as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptSocialInsbase as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleHealthInspaym as i32, ExampleConceptConst::ConceptHealthInspaym as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleHealthInspaym as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptHealthInspaym as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleSocialInspaym as i32, ExampleConceptConst::ConceptSocialInspaym as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleSocialInspaym as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptSocialInspaym as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleTaxingAdvbase as i32, ExampleConceptConst::ConceptTaxingAdvbase as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleTaxingAdvbase as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptTaxingAdvbase as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleTaxingAdvpaym as i32, ExampleConceptConst::ConceptTaxingAdvpaym as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleTaxingAdvpaym as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptTaxingAdvpaym as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleIncomeGross as i32, ExampleConceptConst::ConceptIncomeGross as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleIncomeGross as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptIncomeGross as i32,
                                 vec![]),
-            ProviderRecord::new(ExampleArticleConst::ArticleIncomeNetto as i32, ExampleConceptConst::ConceptIncomeNetto as i32,
+            ProviderRecord::new(ExampleArticleConst::ArticleIncomeNetto as i32, ARTICLE_DEFAULT_SEQUENS, ExampleConceptConst::ConceptIncomeNetto as i32,
                                 vec![]),
         ];
         ArticleSpecFactory::build_providers_from_records(providers_config)
@@ -141,17 +145,34 @@ impl IServiceProcezor for ExampleService {
         self.service.init_with_period(_period)
     }
 
-    fn get_results(&mut self, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, targets: &ArcTermTargetList) -> ResultArcTermResultList {
+    fn get_results(&mut self, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps,
+                   targets: &ArcTermTargetList) -> ResultArcTermResultList {
         self.service.get_results(_period, _ruleset, targets)
+    }
+
+    fn builder_order(&self) -> &Vec<ArticleCode> {
+        self.service.builder_order()
+    }
+
+    fn builder_paths(&self) -> &HashMap<ArticleCode, Vec<ArticleDefine>> {
+        self.service.builder_paths()
+    }
+
+    fn get_contract_terms(&self, _period: &dyn IPeriod, targets: &ArcTermTargetList) -> ArcContractTermList {
+        vec![]
+    }
+
+    fn get_position_terms(&self, _period: &dyn IPeriod, contracts: &ArcContractTermList, targets: &ArcTermTargetList) -> ArcPositionTermList {
+        vec![]
     }
 }
 
 #[allow(dead_code)]
 impl ExampleService {
-    pub(crate) fn new(_version: i32, fin_defs: &dyn IArticleDefine) -> ExampleService {
+    pub(crate) fn new(_version: i32, calc_arts: &Vec<ArticleCode>) -> ExampleService {
         let service = ExampleService {
             service: ServiceProcezor::new(
-                _version, fin_defs,
+                _version, calc_arts,
                 Self::article_factory_builder,
                 Self::concept_factory_builder,
             ),

@@ -1,5 +1,6 @@
 use legalios::service::period::IPeriod;
-use legalios::factories::bundle_props::IBundleProps;
+use legalios::service::bundle_props::IBundleProps;
+use crate::registry_providers::article_provider::{BoxArticleSpec};
 use crate::registry_providers::concept_provider::ResultFunc;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::contract_code::ContractCode;
@@ -12,6 +13,7 @@ use crate::service_types::term_result::ResultArcTermResultList;
 use crate::service_errors::term_result_error::TermResultError;
 
 pub(crate) trait ITermCalcul : ITermSymbol {
+    fn ger_spec(&self) -> Option<BoxArticleSpec>;
     fn get_results(&self, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
 }
 
@@ -20,14 +22,16 @@ pub(crate) type BoxTermCalcul = Box<dyn ITermCalcul>;
 pub(crate) type BoxTermCalculList = Vec<BoxTermCalcul>;
 
 pub(crate) struct TermCalcul {
+    spec: Option<BoxArticleSpec>,
     target: ArcTermTarget,
     result_delegate: Option<ResultFunc>,
 }
 
 impl TermCalcul {
-    pub(crate) fn new(_target: &ArcTermTarget, _delegate: Option<ResultFunc>) -> TermCalcul {
+    pub(crate) fn new(_target: &ArcTermTarget, _spec: Option<BoxArticleSpec>, _delegate: Option<ResultFunc>) -> TermCalcul {
         TermCalcul {
             target: _target.clone(),
+            spec: _spec,
             result_delegate: _delegate,
         }
     }
@@ -64,12 +68,16 @@ impl ITermSymbol for TermCalcul {
 }
 
 impl ITermCalcul for TermCalcul {
+    fn ger_spec(&self) -> Option<BoxArticleSpec> {
+        self.spec
+    }
+
     fn get_results(&self, period: &dyn IPeriod, ruleset: &dyn IBundleProps, results: &ResultArcTermResultList) -> ResultArcTermResultList {
         if self.result_delegate.is_none() {
             let result_error = TermResultError::no_result_func_error(period, &self.target);
             return vec![Err(result_error)];
         }
-        let result_target = self.result_delegate.unwrap()(self.target.clone(), period, ruleset, results);
+        let result_target = self.result_delegate.unwrap()(self.target.clone(), self.spec, period, ruleset, results);
 
         result_target
     }
