@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use legalios::service::period::IPeriod;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
@@ -79,8 +80,8 @@ impl IArticleSpecProvider for ArticleProviderConfig {
         self.spec.get_code()
     }
 
-    fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Box<dyn IArticleSpec> {
-        Box::new(self.article_spec.clone())
+    fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Arc<dyn IArticleSpec> {
+        Arc::new(self.article_spec.clone())
     }
 }
 

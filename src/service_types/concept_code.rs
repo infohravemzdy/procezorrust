@@ -20,6 +20,7 @@ impl PartialEq<Self> for ConceptCode {
 impl Eq for ConceptCode {
 }
 
+#[allow(dead_code)]
 impl ConceptCode {
     pub(crate) fn zero() -> ConceptCode {
         ConceptCode::new()

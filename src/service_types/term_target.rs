@@ -5,7 +5,6 @@ use crate::service_types::contract_code::ContractCode;
 use crate::service_types::month_code::MonthCode;
 use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
-use crate::service_types::article_define::ArticleDefine;
 use crate::service_types::term_symbol::ITermSymbol;
 
 pub(crate) trait ITermTarget : ITermSymbol {

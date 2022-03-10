@@ -1,4 +1,3 @@
-use std::sync::Arc;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use legalios::service::period::{IPeriod, Period};
@@ -6,20 +5,19 @@ use legalios::service::bundle_props::IBundleProps;
 use crate::registry::dependency_graph::DependencyGraph;
 use crate::registry_factories::article_factory::IArticleSpecFactory;
 use crate::registry_factories::concept_factory::IConceptSpecFactory;
-use crate::registry_providers::article_provider::{BoxArticleSpec};
+use crate::registry_providers::article_provider::{ArcArticleSpec};
 use crate::registry_providers::concept_provider::{BoxConceptSpec, ResultFunc};
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
-use crate::service_types::contract_code::ContractCode;
 use crate::service_types::month_code::MonthCode;
-use crate::service_types::position_code::PositionCode;
 use crate::service_types::version_code::VersionCode;
 use crate::service_types::variant_code::VariantCode;
 use crate::service_types::term_result::{ResultArcTermResultList};
-use crate::service_types::term_target::{ArcTermTarget, ArcTermTargetList, TermTarget};
+use crate::service_types::term_target::{ArcTermTarget, ArcTermTargetList};
 use crate::service_types::article_define::{ArticleDefine, IArticleDefine};
 use crate::registry::term_calcul::{BoxTermCalcul, BoxTermCalculList, TermCalcul};
 use crate::service_errors::term_result_error::TermResultError;
+use crate::service_types::article_term::ArticleTerm;
 use crate::service_types::contract_term::ArcContractTermList;
 use crate::service_types::position_term::ArcPositionTermList;
 
@@ -32,8 +30,8 @@ pub(crate) trait IResultBuilder {
                         period: &dyn IPeriod,
                         article_factory: &Box<dyn IArticleSpecFactory>,
                         concept_factory: &Box<dyn IConceptSpecFactory>) -> bool;
-    fn order(&self) -> &Vec<ArticleCode>;
-    fn paths(&self) -> &HashMap<ArticleCode, Vec<ArticleDefine>>;
+    fn order(&self) -> &Vec<ArticleTerm>;
+    fn paths(&self) -> &HashMap<ArticleTerm, Vec<ArticleDefine>>;
     fn get_results(&self, ruleset: &dyn IBundleProps,
                    contracts: &ArcContractTermList, positions: &ArcPositionTermList,
                    targets: &ArcTermTargetList, calc_arts: &Vec<ArticleCode>) -> ResultArcTermResultList;
@@ -42,9 +40,9 @@ pub(crate) trait IResultBuilder {
 pub(crate) struct ResultBuilder {
     version: VersionCode,
     period_init: Period,
-    article_order: Vec<ArticleCode>,
-    article_paths: HashMap<ArticleCode, Vec<ArticleDefine>>,
-    article_model: Vec<BoxArticleSpec>,
+    article_order: Vec<ArticleTerm>,
+    article_paths: HashMap<ArticleTerm, Vec<ArticleDefine>>,
+    article_model: Vec<ArcArticleSpec>,
     concept_model: Vec<BoxConceptSpec>,
 }
 
@@ -66,7 +64,7 @@ impl ResultBuilder {
     fn build_calculs_list(&self, period: &dyn IPeriod, ruleset: &dyn IBundleProps,
                           contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
                           targets: &ArcTermTargetList, calc_arts: &Vec<ArticleCode>) -> BoxTermCalculList {
-        let spec_defines: Vec<Option<&BoxArticleSpec>> = calc_arts.iter().map(|a| self.article_model.iter()
+        let spec_defines: Vec<Option<&ArcArticleSpec>> = calc_arts.iter().map(|a| self.article_model.iter()
             .find(|m| m.get_code() == *a)).collect();
 
         let calc_defines: Vec<ArticleDefine> = spec_defines.iter()
@@ -129,27 +127,37 @@ impl ResultBuilder {
     fn add_defines_to_targets(&self, period: &dyn IPeriod, ruleset: &dyn IBundleProps,
                               contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
                               targets: ArcTermTargetList, defines: &Vec<ArticleDefine>) -> ArcTermTargetList {
+        let targets_list: ArcTermTargetList = targets.to_vec();
+
         return defines.iter()
-            .flat_map(|x| {
-                let init_targets: ArcTermTargetList = targets.iter()
-                    .filter(|t| t.get_article() == x.get_code()).map(|x| *x).collect();
+            .flat_map(|d| {
+                let init_targets= targets_list.iter().filter(|x|
+                    x.get_article() == d.get_code()).map(|t| t.clone()).collect();
+                let article = &d.get_code();
+                let concept= &d.get_role();
+
                 return ResultBuilder::get_target_list(period, ruleset, &self.concept_model,
-                                                      contract_terms, position_terms,
-                                                      &init_targets, &x.get_code(), &x.get_role());
+                                                      contract_terms, position_terms, &init_targets, article, concept);
 
             }).collect();
     }
 
     fn add_target_to_calculs(&self, targets: ArcTermTargetList) -> BoxTermCalculList {
-        let targets_rets = targets.iter()
+        let targets_spec: Vec<(&ArcTermTarget, &ArcArticleSpec)> = targets.iter()
             .map(|x| {
-                let articleSpec = self.article_model.into_iter().find(
+                let article_spec = self.article_model.iter().find(
                     |a| a.get_code() == x.get_article());
-                Box::new(
-                    TermCalcul::new(x, articleSpec, Self::get_calcul_func(&self.concept_model, &x.get_concept()))
-                ) as BoxTermCalcul
-            }).collect();
-         targets_rets
+            (x, article_spec)
+        })
+            .filter(|(_, s)| s.is_some())
+            .map(|(tt,ss)| (tt, ss.unwrap())).collect();
+
+        let targets_rets = targets_spec.iter().map(|(t, s)| {
+            let concept_model = &self.concept_model;
+            let concept = &t.get_concept();
+            Box::new(TermCalcul::new(t, s, Self::get_calcul_func(concept_model, concept))) as BoxTermCalcul
+        }).collect();
+        targets_rets
     }
 
     fn merge_targets(init: ArcTermTargetList, results: ArcTermTargetList) -> ArcTermTargetList {
@@ -164,11 +172,9 @@ impl ResultBuilder {
         let month_code = MonthCode::get(period.get_code());
         let variant = VariantCode::get(1);
 
-        let concept_spec = concepts_model.iter().find(|a| a.get_code() == *concept);
-        if concept_spec.is_some() {
-            let contract = ContractCode::new();
-            let position = PositionCode::new();
-            return vec![Arc::new(TermTarget::new(&month_code, &contract, &position, &variant, article, concept))];
+        let concept_spec = concepts_model.iter().find(|a| a.get_code().get_value() == concept.get_value());
+        if concept_spec.is_none() {
+            return vec![];
         }
         return concept_spec.unwrap()
             .default_target_list(article, period, ruleset, &month_code,
@@ -182,7 +188,7 @@ impl ResultBuilder {
         concept_spec.unwrap().get_result_delegate()
     }
 
-    fn not_found_calcul_func(target: ArcTermTarget, spec: Option<BoxArticleSpec>,
+    fn not_found_calcul_func(target: ArcTermTarget, _spec: ArcArticleSpec,
                              period: &dyn IPeriod, _ruleset: &dyn IBundleProps,
                              _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let result_error = TermResultError::no_result_func_error(period, &target);
@@ -194,7 +200,7 @@ impl ResultBuilder {
         let mut result_list = targets.to_vec();
 
         let pendings_spec = self.article_paths.iter().find(
-            |x| x.0.value == target.get_article().get_value());
+            |x| x.0.get_code().get_value() == target.get_article().get_value());
 
         if pendings_spec.is_none() {
             return result_list;
@@ -205,7 +211,7 @@ impl ResultBuilder {
         let reduce_func = |agr: ArcTermTargetList, def: &ArticleDefine| -> ArcTermTargetList {
             self.merge_item_pendings(period, ruleset,
                                      contract_terms, position_terms,
-                                     &agr, def)
+                                     agr, def)
         };
 
         result_list = pendings_path.iter().fold(result_list, reduce_func);
@@ -215,7 +221,7 @@ impl ResultBuilder {
 
     fn merge_item_pendings(&self, period: &dyn IPeriod, ruleset: &dyn IBundleProps,
                            contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
-                           targets: &ArcTermTargetList, article_defs: &ArticleDefine) -> ArcTermTargetList {
+                           targets: ArcTermTargetList, article_defs: &ArticleDefine) -> ArcTermTargetList {
         let mut result_list: ArcTermTargetList = targets.to_vec();
 
         let init_targets: ArcTermTargetList = targets.into_iter().filter(|x| {
@@ -264,9 +270,9 @@ impl ResultBuilder {
         }
         Ordering::Equal
     }
-    fn target_finder_fun(target: &ArcTermTarget) -> impl FnMut(&ArticleCode) -> bool + '_ {
+    fn target_finder_fun(target: &ArcTermTarget) -> impl FnMut(&ArticleTerm) -> bool + '_ {
         move |x| {
-            x.value == target.get_article().get_value()
+            x.get_code().get_value() == target.get_article().get_value()
         }
     }
 }
@@ -304,11 +310,11 @@ impl IResultBuilder for ResultBuilder {
         true
     }
 
-    fn order(&self) -> &Vec<ArticleCode> {
+    fn order(&self) -> &Vec<ArticleTerm> {
         &self.article_order
     }
 
-    fn paths(&self) -> &HashMap<ArticleCode, Vec<ArticleDefine>> {
+    fn paths(&self) -> &HashMap<ArticleTerm, Vec<ArticleDefine>> {
         &self.article_paths
     }
 

@@ -20,6 +20,7 @@ impl PartialEq<Self> for ArticleCode {
 impl Eq for ArticleCode {
 }
 
+#[allow(dead_code)]
 impl ArticleCode {
     pub(crate) fn zero() -> ArticleCode {
         ArticleCode::new()

@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use chrono::{Datelike, NaiveDate, Weekday};
+use chrono::{NaiveDate};
 use crate::registry_constants::term_constants::{ITermConstants, TermConstants};
 use crate::service_types::contract_code::ContractCode;
 
@@ -51,7 +51,7 @@ impl IContractTerm for ContractTerm {
         self.contract.get_value()!=0
     }
     fn is_active(&self) -> bool {
-        (self.term_day_from < TermConstants::TERM_BEG_FINISHED
-            && self.term_day_stop > TermConstants::TERM_END_FINISHED)
+        self.term_day_from < TermConstants::TERM_BEG_FINISHED
+            && self.term_day_stop > TermConstants::TERM_END_FINISHED
     }
 }

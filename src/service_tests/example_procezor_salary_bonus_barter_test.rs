@@ -10,13 +10,12 @@ mod service_example_tests {
     use crate::service_types::variant_code::VariantCode;
     use crate::service_types::version_code::VersionCode;
     use crate::service_types::position_code::PositionCode;
-    use crate::service_types::article_define::ArticleDefine;
     use crate::service_types::term_symbol::ITermSymbol;
     use crate::service_types::term_target::{ArcTermTargetList, ITermTarget};
     use crate::service::service_procezor::{IServiceProcezor};
     use crate::service_tests::example_constants::ExampleArticleConst;
     use crate::service_tests::example_constants::ExampleConceptConst;
-    use crate::service_tests::example_providers::ExampleTermTarget;
+    use crate::service_tests::example_concepts::ExampleTermTarget;
     use crate::service_tests::example_service::ExampleService;
 
     fn get_targets_with_salary_bonus_barter(period: &dyn IPeriod) -> ArcTermTargetList {

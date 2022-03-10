@@ -1,6 +1,6 @@
 use legalios::service::period::IPeriod;
 use legalios::service::bundle_props::IBundleProps;
-use crate::registry_providers::article_provider::{BoxArticleSpec};
+use crate::registry_providers::article_provider::{ArcArticleSpec};
 use crate::registry_providers::concept_provider::ResultFunc;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::contract_code::ContractCode;
@@ -13,7 +13,7 @@ use crate::service_types::term_result::ResultArcTermResultList;
 use crate::service_errors::term_result_error::TermResultError;
 
 pub(crate) trait ITermCalcul : ITermSymbol {
-    fn ger_spec(&self) -> Option<BoxArticleSpec>;
+    fn ger_spec(&self) -> &ArcArticleSpec;
     fn get_results(&self, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
 }
 
@@ -22,16 +22,16 @@ pub(crate) type BoxTermCalcul = Box<dyn ITermCalcul>;
 pub(crate) type BoxTermCalculList = Vec<BoxTermCalcul>;
 
 pub(crate) struct TermCalcul {
-    spec: Option<BoxArticleSpec>,
+    spec: ArcArticleSpec,
     target: ArcTermTarget,
     result_delegate: Option<ResultFunc>,
 }
 
 impl TermCalcul {
-    pub(crate) fn new(_target: &ArcTermTarget, _spec: Option<BoxArticleSpec>, _delegate: Option<ResultFunc>) -> TermCalcul {
+    pub(crate) fn new(_target: &ArcTermTarget, _spec: &ArcArticleSpec, _delegate: Option<ResultFunc>) -> TermCalcul {
         TermCalcul {
             target: _target.clone(),
-            spec: _spec,
+            spec: _spec.clone(),
             result_delegate: _delegate,
         }
     }
@@ -68,8 +68,8 @@ impl ITermSymbol for TermCalcul {
 }
 
 impl ITermCalcul for TermCalcul {
-    fn ger_spec(&self) -> Option<BoxArticleSpec> {
-        self.spec
+    fn ger_spec(&self) -> &ArcArticleSpec {
+        &self.spec
     }
 
     fn get_results(&self, period: &dyn IPeriod, ruleset: &dyn IBundleProps, results: &ResultArcTermResultList) -> ResultArcTermResultList {
@@ -77,7 +77,7 @@ impl ITermCalcul for TermCalcul {
             let result_error = TermResultError::no_result_func_error(period, &self.target);
             return vec![Err(result_error)];
         }
-        let result_target = self.result_delegate.unwrap()(self.target.clone(), self.spec, period, ruleset, results);
+        let result_target = self.result_delegate.unwrap()(self.target.clone(), self.spec.clone(), period, ruleset, results);
 
         result_target
     }

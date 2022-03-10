@@ -18,8 +18,7 @@ pub(crate) trait IArticleSpec : IArticleDefine {
 }
 
 pub(crate) type ArcArticleSpec = Arc<dyn IArticleSpec>;
-pub(crate) type BoxArticleSpec = Box<dyn IArticleSpec>;
-pub(crate) type BoxArticleSpecList = Vec<BoxArticleSpec>;
+pub(crate) type ArcArticleSpecList = Vec<ArcArticleSpec>;
 
 #[derive(Debug, Clone)]
 pub(crate) struct ArticleSpec {
@@ -79,7 +78,7 @@ pub(crate) trait IArticleProvConst {
 
 pub(crate) trait IArticleSpecProvider {
     fn get_code(&self) -> ArticleCode;
-    fn get_spec(&self, period: &dyn IPeriod, version: &VersionCode) -> BoxArticleSpec;
+    fn get_spec(&self, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec;
 }
 
 pub(crate) type BoxArticleSpecProvider = Box<dyn IArticleSpecProvider>;
@@ -93,9 +92,9 @@ impl IArticleSpecProvider for ArticleSpecProvider {
         self.code
     }
 
-    fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Box<dyn IArticleSpec> {
+    fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Arc<dyn IArticleSpec> {
         let concept = ConceptCode::get(ConceptConst::ConceptNotfound as i32);
-        Box::new(ArticleSpec::new(self.code, ArticleSeqs::zero(),concept, vec![]))
+        Arc::new(ArticleSpec::new(self.code, ArticleSeqs::zero(),concept, vec![]))
     }
 }
 
@@ -150,7 +149,7 @@ macro_rules! impl_article_prov {
             fn get_code(&self) -> ArticleCode {
                 self.$p.get_code()
             }
-            fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> BoxArticleSpec {
+            fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> ArcArticleSpec {
                 Box::new($c::from_code(self.get_code()))
             }
         }

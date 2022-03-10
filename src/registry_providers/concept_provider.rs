@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use legalios::service::period::IPeriod;
 use legalios::service::bundle_props::IBundleProps;
-use crate::registry_providers::article_provider::{BoxArticleSpec};
+use crate::registry_providers::article_provider::{ArcArticleSpec};
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::month_code::MonthCode;
@@ -15,7 +15,7 @@ use crate::service_types::position_term::ArcPositionTermList;
 use crate::service_types::term_result::ResultArcTermResultList;
 use crate::service_types::variant_code::VariantCode;
 
-pub(crate) type ResultFunc = fn(target: ArcTermTarget, _spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
+pub(crate) type ResultFunc = fn(target: ArcTermTarget, _spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
 
 pub(crate) trait IConceptSpec: IConceptDefine {
     fn get_path(&self) -> Vec<ArticleCode>;
@@ -52,7 +52,7 @@ impl IConceptSpec for ConceptSpec {
     fn get_result_delegate(&self) -> Option<ResultFunc> {
         self.result_delegate
     }
-    fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, _ruleset: &dyn IBundleProps, month: &MonthCode,
+    fn default_target_list(&self, article: &ArticleCode, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, month: &MonthCode,
                            _contract_terms: &ArcContractTermList, _position_terms: &ArcPositionTermList,
                            targets: &ArcTermTargetList, vars: VariantCode) -> ArcTermTargetList {
 

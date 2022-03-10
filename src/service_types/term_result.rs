@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use crate::registry_providers::article_provider::{ArticleSpec, BoxArticleSpec};
+use crate::registry_providers::article_provider::{ArcArticleSpec};
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::contract_code::ContractCode;
@@ -12,7 +12,7 @@ use crate::service_errors::term_result_error::TermResultError;
 
 pub(crate) trait ITermResult : ITermSymbol {
     fn get_target(&self) -> ArcTermTarget;
-    fn get_spec(&self) -> Option<BoxArticleSpec>;
+    fn get_spec(&self) -> ArcArticleSpec;
     fn get_concept(&self) -> ConceptCode;
     fn get_concept_descr(&self) -> String;
 }
@@ -25,7 +25,7 @@ pub(crate) type ResultArcTermResultList = Vec<ResultArcTermResult>;
 
 pub(crate) struct TermResult {
     target: ArcTermTarget,
-    spec : Option<BoxArticleSpec>,
+    spec : ArcArticleSpec,
     month_code: MonthCode,
     contract: ContractCode,
     position: PositionCode,
@@ -69,7 +69,7 @@ impl ITermResult for TermResult {
         self.target.clone()
     }
 
-    fn get_spec(&self) -> Option<BoxArticleSpec> { self.spec }
+    fn get_spec(&self) -> ArcArticleSpec { self.spec.clone() }
 
     fn get_concept(&self) -> ConceptCode {
         self.concept
@@ -81,7 +81,7 @@ impl ITermResult for TermResult {
 }
 
 impl TermResult {
-    pub(crate) fn new(_target: ArcTermTarget, _spec: Option<BoxArticleSpec>) -> TermResult {
+    pub(crate) fn new(_target: ArcTermTarget, _spec: ArcArticleSpec) -> TermResult {
         let _month: MonthCode = _target.get_month_code().clone();
         let _contract: ContractCode = _target.get_contract().clone();
         let _position: PositionCode = _target.get_position().clone();
@@ -140,7 +140,7 @@ macro_rules! impl_result_term {
                 self.$p.get_target()
             }
 
-            fn get_spec(&self) -> Option<BoxArticleSpec> {
+            fn get_spec(&self) -> ArcArticleSpec {
                 self.$p.get_spec()
             }
 

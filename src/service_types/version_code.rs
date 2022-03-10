@@ -20,6 +20,7 @@ impl PartialEq<Self> for VersionCode {
 impl Eq for VersionCode {
 }
 
+#[allow(dead_code)]
 impl VersionCode {
     pub(crate) fn zero() -> VersionCode {
         VersionCode::new()

@@ -6,7 +6,6 @@ use crate::service_types::contract_code::ContractCode;
 use crate::service_types::month_code::MonthCode;
 use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
-use crate::service_types::article_define::ArticleDefine;
 use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::{ArcTermTarget, ITermTarget};
 
@@ -69,7 +68,7 @@ impl TermResultError {
     pub(crate) fn no_result_found_error(period: &dyn IPeriod, target: &ArcTermTarget, article_descr: String,
                                         contract: &ContractCode, position: &PositionCode) -> TermResultError {
         TermResultError {
-            message: format!("result for {}{} Not Found", article_descr, TermResultError::messageContractPosition(contract, position)),
+            message: format!("result for {}{} Not Found", article_descr, TermResultError::message_contract_position(contract, position)),
             target: target.clone(),
             period: Period::get(period.get_code()),
         }
@@ -78,13 +77,13 @@ impl TermResultError {
     pub(crate) fn null_result_found_error(period: &dyn IPeriod, target: &ArcTermTarget, article_descr: String,
                                           contract: &ContractCode, position: &PositionCode) -> TermResultError {
         TermResultError {
-            message: format!("result found for {}{} but Instance is Null!", article_descr, TermResultError::messageContractPosition(contract, position)),
+            message: format!("result found for {}{} but Instance is Null!", article_descr, TermResultError::message_contract_position(contract, position)),
             target: target.clone(),
             period: Period::get(period.get_code()),
         }
     }
 
-    fn messageContractPosition(contract: &ContractCode, position: &PositionCode) -> String {
+    fn message_contract_position(contract: &ContractCode, position: &PositionCode) -> String {
         return if contract.is_valid() && position.is_valid() {
             format!(", contract={}, position={}", contract.get_value(), position.get_value())
         } else if contract.is_valid() {

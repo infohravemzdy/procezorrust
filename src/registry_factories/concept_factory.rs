@@ -49,7 +49,7 @@ impl IConceptSpec for NotFoundConceptSpec {
     fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, ruleset: &dyn IBundleProps, month: &MonthCode,
                            contract_terms: &ArcContractTermList, position_terms: &ArcPositionTermList,
                            targets: &ArcTermTargetList, vars: VariantCode) -> ArcTermTargetList {
-        self.default_target_list(article, period, ruleset, month, contract_terms, position_terms, targets, vars)
+        self.spec.default_target_list(article, period, ruleset, month, contract_terms, position_terms, targets, vars)
     }
 }
 

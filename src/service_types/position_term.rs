@@ -35,8 +35,8 @@ pub(crate) type ArcPositionTermList = Vec<ArcPositionTerm>;
 
 impl PositionTerm {
     fn is_position_active(&self) -> bool {
-        (self.term_day_from < TermConstants::TERM_BEG_FINISHED
-            && self.term_day_stop > TermConstants::TERM_END_FINISHED)
+        self.term_day_from < TermConstants::TERM_BEG_FINISHED
+            && self.term_day_stop > TermConstants::TERM_END_FINISHED
     }
 
 }

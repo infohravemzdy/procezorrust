@@ -1,144 +1,22 @@
 use std::sync::Arc;
 use legalios::service::period::IPeriod;
 use legalios::service::bundle_props::IBundleProps;
-use crate::registry_providers::article_provider::BoxArticleSpec;
+use crate::registry_providers::article_provider::ArcArticleSpec;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::concept_define::IConceptDefine;
-use crate::service_types::contract_code::ContractCode;
 use crate::service_types::month_code::MonthCode;
-use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
 use crate::service_types::version_code::VersionCode;
-use crate::service_types::term_symbol::ITermSymbol;
-use crate::service_types::term_target::{ArcTermTarget, ArcTermTargetList, ITermTarget, TermTarget};
-use crate::service_types::term_result::{ITermResult, ResultArcTermResultList, TermResult};
+use crate::service_types::term_target::{ArcTermTarget, ArcTermTargetList};
+use crate::service_types::term_result::{ResultArcTermResultList};
 use crate::registry_providers::concept_provider::{BoxConceptSpec, ConceptSpec, ConceptSpecProvider, IConceptSpec, IConceptSpecConst, IConceptSpecProvider, ResultFunc};
+use crate::service_tests::example_concepts::ExampleConceptSpec;
 use crate::service_tests::example_constants::ExampleArticleConst;
 use crate::service_tests::example_constants::ExampleConceptConst;
 use crate::service_tests::example_results::{AmountBasisResult, AmountFixedResult, HealthInsbaseResult, HealthInspaymResult, IncomeGrossResult, IncomeNettoResult, SocialInsbaseResult, SocialInspaymResult, TaxingAdvbaseResult, TaxingAdvpaymResult, TimeshtWorkingResult};
-use crate::service_types::article_define::ArticleDefine;
 use crate::service_types::contract_term::ArcContractTermList;
 use crate::service_types::position_term::ArcPositionTermList;
-
-pub(crate) struct ExampleTermTarget {
-    term: TermTarget,
-}
-
-#[allow(dead_code)]
-impl ExampleTermTarget {
-    pub(crate) fn new(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
-                      article: &ArticleCode, concept: &ConceptCode) -> ExampleTermTarget {
-        ExampleTermTarget {
-            term: TermTarget::new(month, contract, position, variant, article, concept),
-        }
-    }
-    pub(crate) fn zero_value(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
-                             article: &ArticleCode, concept: &ConceptCode) -> ExampleTermTarget {
-        ExampleTermTarget::new(month, contract, position, variant, article, concept)
-    }
-}
-
-impl ITermSymbol for ExampleTermTarget {
-    fn is_null(&self) -> bool {
-        self.term.is_null()
-    }
-
-    fn get_month_code(&self) -> MonthCode {
-        self.term.get_month_code()
-    }
-
-    fn get_contract(&self) -> ContractCode {
-        self.term.get_contract()
-    }
-
-    fn get_position(&self) -> PositionCode {
-        self.term.get_position()
-    }
-
-    fn get_variant(&self) -> VariantCode {
-        self.term.get_variant()
-    }
-
-    fn get_article(&self) -> ArticleCode {
-        self.term.get_article()
-    }
-
-    fn get_article_descr(&self) -> String {
-        ExampleArticleConst::name_of_article(self.get_article().value)
-    }
-}
-
-impl ITermTarget for ExampleTermTarget {
-    fn get_concept(&self) -> ConceptCode {
-        self.term.get_concept()
-    }
-
-    fn get_concept_descr(&self) -> String {
-        ExampleConceptConst::name_of_concept(self.get_concept().value)
-    }
-}
-
-pub(crate) struct ExampleTermResult {
-    term: TermResult,
-}
-
-#[allow(dead_code)]
-impl ExampleTermResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> ExampleTermResult {
-        ExampleTermResult {
-            term: TermResult::new(target, spec),
-        }
-    }
-}
-
-impl ITermSymbol for ExampleTermResult {
-    fn is_null(&self) -> bool {
-        self.term.is_null()
-    }
-
-    fn get_month_code(&self) -> MonthCode {
-        self.term.get_month_code()
-    }
-
-    fn get_contract(&self) -> ContractCode {
-        self.term.get_contract()
-    }
-
-    fn get_position(&self) -> PositionCode {
-        self.term.get_position()
-    }
-
-    fn get_variant(&self) -> VariantCode {
-        self.term.get_variant()
-    }
-
-    fn get_article(&self) -> ArticleCode {
-        self.term.get_article()
-    }
-
-    fn get_article_descr(&self) -> String {
-        ExampleArticleConst::name_of_article(self.get_article().value)
-    }
-}
-
-impl ITermResult for ExampleTermResult {
-    fn get_target(&self) -> ArcTermTarget {
-        self.term.get_target()
-    }
-
-    fn get_spec(&self) -> Option<BoxArticleSpec> {
-        self.term.get_spec()
-    }
-
-    fn get_concept(&self) -> ConceptCode {
-        self.term.get_concept()
-    }
-
-    fn get_concept_descr(&self) -> String {
-        ExampleConceptConst::name_of_concept(self.get_concept().value)
-    }
-}
 
 pub(crate) struct TimeshtWorkingConProv {
     pub(crate) provider: ConceptSpecProvider,
@@ -152,21 +30,21 @@ impl IConceptSpecConst for TimeshtWorkingConProv {
 crate::impl_concept_prov!(TimeshtWorkingConProv, provider, TimeshtWorkingConSpec);
 
 pub(crate) struct TimeshtWorkingConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
 impl TimeshtWorkingConSpec {
     fn from_code(_code: ConceptCode) -> TimeshtWorkingConSpec {
         TimeshtWorkingConSpec {
-            spec: ConceptSpec::new(_code, vec![], Some(TimeshtWorkingConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, vec![], Some(TimeshtWorkingConSpec::concept_eval)),
         }
     }
 
     fn new() -> TimeshtWorkingConSpec {
         TimeshtWorkingConSpec::from_code(ConceptCode::get(TimeshtWorkingConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = TimeshtWorkingResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -197,7 +75,7 @@ impl IConceptSpecConst for AmountBasisConProv {
 crate::impl_concept_prov!(AmountBasisConProv, provider, AmountBasisConSpec);
 
 pub(crate) struct AmountBasisConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
@@ -207,14 +85,14 @@ impl AmountBasisConSpec {
             ExampleArticleConst::ArticleTimeshtWorking as i32,
         ];
         AmountBasisConSpec {
-            spec: ConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(AmountBasisConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(AmountBasisConSpec::concept_eval)),
         }
     }
 
     fn new() -> AmountBasisConSpec {
         AmountBasisConSpec::from_code(ConceptCode::get(AmountBasisConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = AmountBasisResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -245,21 +123,21 @@ impl IConceptSpecConst for AmountFixedConProv {
 crate::impl_concept_prov!(AmountFixedConProv, provider, AmountFixedConSpec);
 
 pub(crate) struct AmountFixedConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
 impl AmountFixedConSpec {
     fn from_code(_code: ConceptCode) -> AmountFixedConSpec {
         AmountFixedConSpec {
-            spec: ConceptSpec::new(_code, vec![], Some(AmountFixedConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, vec![], Some(AmountFixedConSpec::concept_eval)),
         }
     }
 
     fn new() -> AmountFixedConSpec {
         AmountFixedConSpec::from_code(ConceptCode::get(AmountFixedConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = AmountFixedResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -290,21 +168,21 @@ impl IConceptSpecConst for HealthInsbaseConProv {
 crate::impl_concept_prov!(HealthInsbaseConProv, provider, HealthInsbaseConSpec);
 
 pub(crate) struct HealthInsbaseConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
 impl HealthInsbaseConSpec {
     fn from_code(_code: ConceptCode) -> HealthInsbaseConSpec {
         HealthInsbaseConSpec {
-            spec: ConceptSpec::new(_code, vec![], Some(HealthInsbaseConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, vec![], Some(HealthInsbaseConSpec::concept_eval)),
         }
     }
 
     fn new() -> HealthInsbaseConSpec {
         HealthInsbaseConSpec::from_code(ConceptCode::get(HealthInsbaseConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = HealthInsbaseResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -335,21 +213,21 @@ impl IConceptSpecConst for SocialInsbaseConProv {
 crate::impl_concept_prov!(SocialInsbaseConProv, provider, SocialInsbaseConSpec);
 
 pub(crate) struct SocialInsbaseConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
 impl SocialInsbaseConSpec {
     fn from_code(_code: ConceptCode) -> SocialInsbaseConSpec {
         SocialInsbaseConSpec {
-            spec: ConceptSpec::new(_code, vec![], Some(SocialInsbaseConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, vec![], Some(SocialInsbaseConSpec::concept_eval)),
         }
     }
 
     fn new() -> SocialInsbaseConSpec {
         SocialInsbaseConSpec::from_code(ConceptCode::get(SocialInsbaseConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = SocialInsbaseResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -380,7 +258,7 @@ impl IConceptSpecConst for HealthInspaymConProv {
 crate::impl_concept_prov!(HealthInspaymConProv, provider, HealthInspaymConSpec);
 
 pub(crate) struct HealthInspaymConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
@@ -390,14 +268,14 @@ impl HealthInspaymConSpec {
             ExampleArticleConst::ArticleHealthInsbase as i32,
         ];
         HealthInspaymConSpec {
-            spec: ConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(HealthInspaymConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(HealthInspaymConSpec::concept_eval)),
         }
     }
 
     fn new() -> HealthInspaymConSpec {
         HealthInspaymConSpec::from_code(ConceptCode::get(HealthInspaymConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = HealthInspaymResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -428,7 +306,7 @@ impl IConceptSpecConst for SocialInspaymConProv {
 crate::impl_concept_prov!(SocialInspaymConProv, provider, SocialInspaymConSpec);
 
 pub(crate) struct SocialInspaymConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
@@ -438,14 +316,14 @@ impl SocialInspaymConSpec {
             ExampleArticleConst::ArticleSocialInsbase as i32,
         ];
         SocialInspaymConSpec {
-            spec: ConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(SocialInspaymConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(SocialInspaymConSpec::concept_eval)),
         }
     }
 
     fn new() -> SocialInspaymConSpec {
         SocialInspaymConSpec::from_code(ConceptCode::get(SocialInspaymConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = SocialInspaymResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -476,21 +354,21 @@ impl IConceptSpecConst for TaxingAdvbaseConProv {
 crate::impl_concept_prov!(TaxingAdvbaseConProv, provider, TaxingAdvbaseConSpec);
 
 pub(crate) struct TaxingAdvbaseConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
 impl TaxingAdvbaseConSpec {
     fn from_code(_code: ConceptCode) -> TaxingAdvbaseConSpec {
         TaxingAdvbaseConSpec {
-            spec: ConceptSpec::new(_code, vec![], Some(TaxingAdvbaseConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, vec![], Some(TaxingAdvbaseConSpec::concept_eval)),
         }
     }
 
     fn new() -> TaxingAdvbaseConSpec {
         TaxingAdvbaseConSpec::from_code(ConceptCode::get(TaxingAdvbaseConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = TaxingAdvbaseResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -521,7 +399,7 @@ impl IConceptSpecConst for TaxingAdvpaymConProv {
 crate::impl_concept_prov!(TaxingAdvpaymConProv, provider, TaxingAdvpaymConSpec);
 
 pub(crate) struct TaxingAdvpaymConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
@@ -531,14 +409,14 @@ impl TaxingAdvpaymConSpec {
             ExampleArticleConst::ArticleTaxingAdvbase as i32,
         ];
         TaxingAdvpaymConSpec {
-            spec: ConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(TaxingAdvpaymConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(TaxingAdvpaymConSpec::concept_eval)),
         }
     }
 
     fn new() -> TaxingAdvpaymConSpec {
         TaxingAdvpaymConSpec::from_code(ConceptCode::get(TaxingAdvpaymConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = TaxingAdvpaymResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -569,21 +447,21 @@ impl IConceptSpecConst for IncomeGrossConProv {
 crate::impl_concept_prov!(IncomeGrossConProv, provider, IncomeGrossConSpec);
 
 pub(crate) struct IncomeGrossConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
 impl IncomeGrossConSpec {
     fn from_code(_code: ConceptCode) -> IncomeGrossConSpec {
         IncomeGrossConSpec {
-            spec: ConceptSpec::new(_code, vec![], Some(IncomeGrossConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, vec![], Some(IncomeGrossConSpec::concept_eval)),
         }
     }
 
     fn new() -> IncomeGrossConSpec {
         IncomeGrossConSpec::from_code(ConceptCode::get(IncomeGrossConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = IncomeGrossResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));
@@ -614,7 +492,7 @@ impl IConceptSpecConst for IncomeNettoConProv {
 crate::impl_concept_prov!(IncomeNettoConProv, provider, IncomeNettoConSpec);
 
 pub(crate) struct IncomeNettoConSpec {
-    spec: ConceptSpec,
+    spec: ExampleConceptSpec,
 }
 
 #[allow(dead_code)]
@@ -627,14 +505,14 @@ impl IncomeNettoConSpec {
             ExampleArticleConst::ArticleTaxingAdvpaym as i32,
         ];
         IncomeNettoConSpec {
-            spec: ConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(IncomeNettoConSpec::concept_eval)),
+            spec: ExampleConceptSpec::new(_code, ConceptSpec::const_to_path_array(spec_path), Some(IncomeNettoConSpec::concept_eval)),
         }
     }
 
     fn new() -> IncomeNettoConSpec {
         IncomeNettoConSpec::from_code(ConceptCode::get(IncomeNettoConProv::CONCEPT_CODE))
     }
-    fn concept_eval(target: ArcTermTarget, spec: Option<BoxArticleSpec>, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
+    fn concept_eval(target: ArcTermTarget, spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList {
         let results_values = IncomeNettoResult::new(target, spec);
 
         return vec!(Ok(Arc::new(results_values)));

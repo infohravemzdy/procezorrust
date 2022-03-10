@@ -6,23 +6,24 @@ use crate::service_types::concept_code::ConceptCode;
 use crate::service_types::term_result::{ResultArcTermResultList};
 use crate::service_types::term_target::{ArcTermTargetList};
 use crate::service_types::version_code::VersionCode;
-use crate::service_types::article_define::{ArticleDefine, IArticleDefine};
+use crate::service_types::article_define::{ArticleDefine};
 use crate::registry_factories::article_factory::IArticleSpecFactory;
 use crate::registry_factories::concept_factory::IConceptSpecFactory;
-use crate::registry_providers::article_provider::BoxArticleSpec;
+use crate::registry_providers::article_provider::ArcArticleSpec;
 use crate::registry_providers::concept_provider::BoxConceptSpec;
 use crate::registry::result_builder::{IResultBuilder, ResultBuilder};
+use crate::service_types::article_term::ArticleTerm;
 use crate::service_types::contract_term::ArcContractTermList;
 use crate::service_types::position_term::ArcPositionTermList;
 
 pub(crate) trait IServiceProcezor {
-    fn builder_order(&self) -> &Vec<ArticleCode>;
-    fn builder_paths(&self) -> &HashMap<ArticleCode, Vec<ArticleDefine>>;
+    fn builder_order(&self) -> &Vec<ArticleTerm>;
+    fn builder_paths(&self) -> &HashMap<ArticleTerm, Vec<ArticleDefine>>;
 
     fn get_contract_terms(&self, _period: &dyn IPeriod, targets: &ArcTermTargetList) -> ArcContractTermList;
     fn get_position_terms(&self, _period: &dyn IPeriod, contracts: &ArcContractTermList, targets: &ArcTermTargetList) -> ArcPositionTermList;
     fn get_results(&mut self, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, targets: &ArcTermTargetList) -> ResultArcTermResultList;
-    fn get_article_spec(&self, _article: &ArticleCode, _period: &dyn IPeriod, _version: &VersionCode) -> BoxArticleSpec;
+    fn get_article_spec(&self, _article: &ArticleCode, _period: &dyn IPeriod, _version: &VersionCode) -> ArcArticleSpec;
     fn get_concept_spec(&self, _concept: &ConceptCode, _period: &dyn IPeriod, _version: &VersionCode) -> BoxConceptSpec;
     fn init_with_period(&mut self, _period: &dyn IPeriod) -> bool;
 }
@@ -36,19 +37,19 @@ pub(crate) struct ServiceProcezor {
 }
 
 impl IServiceProcezor for ServiceProcezor {
-    fn builder_order(&self) -> &Vec<ArticleCode> {
+    fn builder_order(&self) -> &Vec<ArticleTerm> {
         self.builder.order()
     }
 
-    fn builder_paths(&self) -> &HashMap<ArticleCode, Vec<ArticleDefine>> {
+    fn builder_paths(&self) -> &HashMap<ArticleTerm, Vec<ArticleDefine>> {
         self.builder.paths()
     }
 
-    fn get_contract_terms(&self, _period: &dyn IPeriod, targets: &ArcTermTargetList) -> ArcContractTermList {
+    fn get_contract_terms(&self, _period: &dyn IPeriod, _targets: &ArcTermTargetList) -> ArcContractTermList {
         vec![]
     }
 
-    fn get_position_terms(&self, _period: &dyn IPeriod, contracts: &ArcContractTermList, targets: &ArcTermTargetList) -> ArcPositionTermList {
+    fn get_position_terms(&self, _period: &dyn IPeriod, _contracts: &ArcContractTermList, _targets: &ArcTermTargetList) -> ArcPositionTermList {
         vec![]
     }
 
@@ -60,17 +61,17 @@ impl IServiceProcezor for ServiceProcezor {
         if !success {
             return results;
         }
-        let contractTerms = self.get_contract_terms(_period, targets);
-        let positionTerms = self.get_position_terms(_period, &contractTerms, targets);
+        let contract_terms = self.get_contract_terms(_period, targets);
+        let position_terms = self.get_position_terms(_period, &contract_terms, targets);
 
         results = self.builder.get_results(_ruleset,
-                                           &contractTerms,
-                                           &positionTerms, targets, &self.calc_articles);
+                                           &contract_terms,
+                                           &position_terms, targets, &self.calc_articles);
 
         return results;
     }
 
-    fn get_article_spec(&self, _article: &ArticleCode, _period: &dyn IPeriod, _version: &VersionCode) -> BoxArticleSpec {
+    fn get_article_spec(&self, _article: &ArticleCode, _period: &dyn IPeriod, _version: &VersionCode) -> ArcArticleSpec {
         self.article_factory.get_spec(_article, _period, _version)
     }
 
@@ -91,6 +92,9 @@ impl IServiceProcezor for ServiceProcezor {
             init_result = self.builder.init_with_period(&self.version, period,
                                                         &self.article_factory,
                                                         &self.concept_factory);
+        }
+        if init_result == false {
+            println!("Period: {}, init with period failed", period.get_code())
         }
         init_result
     }

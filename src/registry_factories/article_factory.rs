@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::Arc;
 use legalios::service::period::IPeriod;
 use crate::service_types::article_code::ArticleCode;
 use crate::service_types::concept_code::ConceptCode;
@@ -7,7 +8,7 @@ use crate::service_types::article_define::{ArticleDefine, IArticleDefine};
 use crate::registry_constants::article_consts::ArticleConst;
 use crate::registry_constants::concept_consts::ConceptConst;
 use crate::registry_factories::article_config::ArticleProviderConfig;
-use crate::registry_providers::article_provider::{ArticleSpec, ArticleSpecProvider, BoxArticleSpec, BoxArticleSpecProvider, IArticleSpec, IArticleSpecProvider};
+use crate::registry_providers::article_provider::{ArticleSpec, ArticleSpecProvider, ArcArticleSpec, BoxArticleSpecProvider, IArticleSpec, IArticleSpecProvider};
 use crate::service_types::article_seqs::ArticleSeqs;
 use crate::service_types::article_term::ArticleTerm;
 
@@ -70,8 +71,8 @@ impl IArticleSpecProvider for NotFoundArticleProvider {
         self.spec.get_code()
     }
 
-    fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Box<dyn IArticleSpec> {
-        Box::new(NotFoundArticleSpec::get(self.spec.code))
+    fn get_spec(&self, _period: &dyn IPeriod, _version: &VersionCode) -> Arc<dyn IArticleSpec> {
+        Arc::new(NotFoundArticleSpec::get(self.spec.code))
     }
 }
 
@@ -105,8 +106,8 @@ impl ProviderRecord {
 }
 
 pub(crate) trait IArticleSpecFactory {
-    fn get_spec(&self, code: &ArticleCode, period: &dyn IPeriod, version: &VersionCode) -> BoxArticleSpec;
-    fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<BoxArticleSpec>;
+    fn get_spec(&self, code: &ArticleCode, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec;
+    fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<ArcArticleSpec>;
 }
 pub(crate) type BoxArticleSpecFactory = Box<dyn IArticleSpecFactory>;
 
@@ -116,17 +117,17 @@ pub(crate) struct ArticleSpecFactory {
 }
 
 impl IArticleSpecFactory for ArticleSpecFactory {
-    fn get_spec(&self, code: &ArticleCode, period: &dyn IPeriod, version: &VersionCode) -> BoxArticleSpec {
+    fn get_spec(&self, code: &ArticleCode, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec {
         let opt_provider = self.get_provider(code, &self.not_found_provider);
         match opt_provider {
             Some(provider) => provider.get_spec(period, version),
-            None => Box::new(NotFoundArticleSpec::new()),
+            None => Arc::new(NotFoundArticleSpec::new()),
         }
     }
 
-    fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<BoxArticleSpec> {
+    fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<ArcArticleSpec> {
         let values = self.providers.iter()
-            .map(|x| x.1.get_spec(period, version)).collect::<Vec<BoxArticleSpec>>();
+            .map(|x| x.1.get_spec(period, version)).collect::<Vec<ArcArticleSpec>>();
         values
     }
 }

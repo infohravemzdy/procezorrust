@@ -6,7 +6,7 @@ use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
 use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::ArcTermTarget;
-use crate::registry_providers::article_provider::BoxArticleSpec;
+use crate::registry_providers::article_provider::ArcArticleSpec;
 use crate::service_types::term_result::{ITermResult, TermResult};
 
 pub(crate) struct TimeshtWorkingResult {
@@ -15,7 +15,7 @@ pub(crate) struct TimeshtWorkingResult {
 
 #[allow(dead_code)]
 impl TimeshtWorkingResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> TimeshtWorkingResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> TimeshtWorkingResult {
         TimeshtWorkingResult {
             term: TermResult::new(target, spec),
         }
@@ -30,7 +30,7 @@ pub(crate) struct AmountBasisResult {
 
 #[allow(dead_code)]
 impl AmountBasisResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> AmountBasisResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> AmountBasisResult {
         AmountBasisResult {
             term: TermResult::new(target, spec),
         }
@@ -45,7 +45,7 @@ pub(crate) struct AmountFixedResult {
 
 #[allow(dead_code)]
 impl AmountFixedResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> AmountFixedResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> AmountFixedResult {
         AmountFixedResult {
             term: TermResult::new(target, spec),
         }
@@ -60,7 +60,7 @@ pub(crate) struct HealthInsbaseResult {
 
 #[allow(dead_code)]
 impl HealthInsbaseResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> HealthInsbaseResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> HealthInsbaseResult {
         HealthInsbaseResult {
             term: TermResult::new(target, spec),
         }
@@ -75,7 +75,7 @@ pub(crate) struct SocialInsbaseResult {
 
 #[allow(dead_code)]
 impl SocialInsbaseResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> SocialInsbaseResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> SocialInsbaseResult {
         SocialInsbaseResult {
             term: TermResult::new(target, spec),
         }
@@ -90,7 +90,7 @@ pub(crate) struct HealthInspaymResult {
 
 #[allow(dead_code)]
 impl HealthInspaymResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> HealthInspaymResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> HealthInspaymResult {
         HealthInspaymResult {
             term: TermResult::new(target, spec),
         }
@@ -105,7 +105,7 @@ pub(crate) struct SocialInspaymResult {
 
 #[allow(dead_code)]
 impl SocialInspaymResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> SocialInspaymResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> SocialInspaymResult {
         SocialInspaymResult {
             term: TermResult::new(target, spec),
         }
@@ -120,7 +120,7 @@ pub(crate) struct TaxingAdvbaseResult {
 
 #[allow(dead_code)]
 impl TaxingAdvbaseResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> TaxingAdvbaseResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> TaxingAdvbaseResult {
         TaxingAdvbaseResult {
             term: TermResult::new(target, spec),
         }
@@ -135,7 +135,7 @@ pub(crate) struct TaxingAdvpaymResult {
 
 #[allow(dead_code)]
 impl TaxingAdvpaymResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> TaxingAdvpaymResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> TaxingAdvpaymResult {
         TaxingAdvpaymResult {
             term: TermResult::new(target, spec),
         }
@@ -150,7 +150,7 @@ pub(crate) struct IncomeGrossResult {
 
 #[allow(dead_code)]
 impl IncomeGrossResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> IncomeGrossResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> IncomeGrossResult {
         IncomeGrossResult {
             term: TermResult::new(target, spec),
         }
@@ -165,7 +165,7 @@ pub(crate) struct IncomeNettoResult {
 
 #[allow(dead_code)]
 impl IncomeNettoResult {
-    pub(crate) fn new(target: ArcTermTarget, spec: Option<BoxArticleSpec>) -> IncomeNettoResult {
+    pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> IncomeNettoResult {
         IncomeNettoResult {
             term: TermResult::new(target, spec),
         }

@@ -25,6 +25,7 @@ impl PartialEq<Self> for ArticleTerm {
 impl Eq for ArticleTerm {
 }
 
+#[allow(dead_code)]
 impl ArticleTerm {
     pub(crate) fn zero() -> ArticleTerm {
         ArticleTerm::new()
