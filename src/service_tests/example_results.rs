@@ -9,6 +9,7 @@ use crate::service_types::term_target::ArcTermTarget;
 use crate::registry_providers::article_provider::ArcArticleSpec;
 use crate::service_types::term_result::{ITermResult, TermResult};
 
+// TimeshtWorking		TIMESHT_WORKING
 pub(crate) struct TimeshtWorkingResult {
     term: TermResult,
 }
@@ -17,13 +18,15 @@ pub(crate) struct TimeshtWorkingResult {
 impl TimeshtWorkingResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> TimeshtWorkingResult {
         TimeshtWorkingResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(TimeshtWorkingResult, term);
+
+// AmountBasis		AMOUNT_BASIS
 pub(crate) struct AmountBasisResult {
     term: TermResult,
 }
@@ -32,13 +35,15 @@ pub(crate) struct AmountBasisResult {
 impl AmountBasisResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> AmountBasisResult {
         AmountBasisResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(AmountBasisResult, term);
+
+// AmountFixed		AMOUNT_FIXED
 pub(crate) struct AmountFixedResult {
     term: TermResult,
 }
@@ -47,13 +52,15 @@ pub(crate) struct AmountFixedResult {
 impl AmountFixedResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> AmountFixedResult {
         AmountFixedResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(AmountFixedResult, term);
+
+// HealthInsbase		HEALTH_INSBASE
 pub(crate) struct HealthInsbaseResult {
     term: TermResult,
 }
@@ -62,13 +69,15 @@ pub(crate) struct HealthInsbaseResult {
 impl HealthInsbaseResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> HealthInsbaseResult {
         HealthInsbaseResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(HealthInsbaseResult, term);
+
+// SocialInsbase		SOCIAL_INSBASE
 pub(crate) struct SocialInsbaseResult {
     term: TermResult,
 }
@@ -77,13 +86,15 @@ pub(crate) struct SocialInsbaseResult {
 impl SocialInsbaseResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> SocialInsbaseResult {
         SocialInsbaseResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(SocialInsbaseResult, term);
+
+// HealthInspaym		HEALTH_INSPAYM
 pub(crate) struct HealthInspaymResult {
     term: TermResult,
 }
@@ -92,13 +103,15 @@ pub(crate) struct HealthInspaymResult {
 impl HealthInspaymResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> HealthInspaymResult {
         HealthInspaymResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(HealthInspaymResult, term);
+
+// SocialInspaym		SOCIAL_INSPAYM
 pub(crate) struct SocialInspaymResult {
     term: TermResult,
 }
@@ -107,13 +120,15 @@ pub(crate) struct SocialInspaymResult {
 impl SocialInspaymResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> SocialInspaymResult {
         SocialInspaymResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(SocialInspaymResult, term);
+
+// TaxingAdvbase		TAXING_ADVBASE
 pub(crate) struct TaxingAdvbaseResult {
     term: TermResult,
 }
@@ -122,13 +137,15 @@ pub(crate) struct TaxingAdvbaseResult {
 impl TaxingAdvbaseResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> TaxingAdvbaseResult {
         TaxingAdvbaseResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(TaxingAdvbaseResult, term);
+
+// TaxingAdvpaym		TAXING_ADVPAYM
 pub(crate) struct TaxingAdvpaymResult {
     term: TermResult,
 }
@@ -137,13 +154,15 @@ pub(crate) struct TaxingAdvpaymResult {
 impl TaxingAdvpaymResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> TaxingAdvpaymResult {
         TaxingAdvpaymResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(TaxingAdvpaymResult, term);
+
+// IncomeGross		INCOME_GROSS
 pub(crate) struct IncomeGrossResult {
     term: TermResult,
 }
@@ -152,13 +171,15 @@ pub(crate) struct IncomeGrossResult {
 impl IncomeGrossResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> IncomeGrossResult {
         IncomeGrossResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(IncomeGrossResult, term);
+
+// IncomeNetto		INCOME_NETTO
 pub(crate) struct IncomeNettoResult {
     term: TermResult,
 }
@@ -167,10 +188,11 @@ pub(crate) struct IncomeNettoResult {
 impl IncomeNettoResult {
     pub(crate) fn new(target: ArcTermTarget, spec: ArcArticleSpec) -> IncomeNettoResult {
         IncomeNettoResult {
-            term: TermResult::new(target, spec),
+            term: ExampleTermResult::new(target, spec),
         }
     }
 }
 
 #[macro_use(crate::impl_result_term)]
 crate::impl_result_term!(IncomeNettoResult, term);
+
