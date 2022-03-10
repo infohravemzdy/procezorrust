@@ -7,11 +7,12 @@ use crate::service_types::variant_code::VariantCode;
 use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::ArcTermTarget;
 use crate::registry_providers::article_provider::ArcArticleSpec;
-use crate::service_types::term_result::{ITermResult, TermResult};
+use crate::service_tests::example_concepts::ExampleTermResult;
+use crate::service_types::term_result::{ITermResult};
 
 // TimeshtWorking		TIMESHT_WORKING
 pub(crate) struct TimeshtWorkingResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -28,7 +29,7 @@ crate::impl_result_term!(TimeshtWorkingResult, term);
 
 // AmountBasis		AMOUNT_BASIS
 pub(crate) struct AmountBasisResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -45,7 +46,7 @@ crate::impl_result_term!(AmountBasisResult, term);
 
 // AmountFixed		AMOUNT_FIXED
 pub(crate) struct AmountFixedResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -62,7 +63,7 @@ crate::impl_result_term!(AmountFixedResult, term);
 
 // HealthInsbase		HEALTH_INSBASE
 pub(crate) struct HealthInsbaseResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -79,7 +80,7 @@ crate::impl_result_term!(HealthInsbaseResult, term);
 
 // SocialInsbase		SOCIAL_INSBASE
 pub(crate) struct SocialInsbaseResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -96,7 +97,7 @@ crate::impl_result_term!(SocialInsbaseResult, term);
 
 // HealthInspaym		HEALTH_INSPAYM
 pub(crate) struct HealthInspaymResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -113,7 +114,7 @@ crate::impl_result_term!(HealthInspaymResult, term);
 
 // SocialInspaym		SOCIAL_INSPAYM
 pub(crate) struct SocialInspaymResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -130,7 +131,7 @@ crate::impl_result_term!(SocialInspaymResult, term);
 
 // TaxingAdvbase		TAXING_ADVBASE
 pub(crate) struct TaxingAdvbaseResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -147,7 +148,7 @@ crate::impl_result_term!(TaxingAdvbaseResult, term);
 
 // TaxingAdvpaym		TAXING_ADVPAYM
 pub(crate) struct TaxingAdvpaymResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -164,7 +165,7 @@ crate::impl_result_term!(TaxingAdvpaymResult, term);
 
 // IncomeGross		INCOME_GROSS
 pub(crate) struct IncomeGrossResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
@@ -181,7 +182,7 @@ crate::impl_result_term!(IncomeGrossResult, term);
 
 // IncomeNetto		INCOME_NETTO
 pub(crate) struct IncomeNettoResult {
-    term: TermResult,
+    term: ExampleTermResult,
 }
 
 #[allow(dead_code)]
