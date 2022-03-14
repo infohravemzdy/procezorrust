@@ -1,2 +1,2 @@
-pub(crate) mod article_provider;
-pub(crate) mod concept_provider;
+pub mod article_provider;
+pub mod concept_provider;
