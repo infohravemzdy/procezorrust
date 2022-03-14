@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct VariantCode {
+pub struct VariantCode {
     value: i16
 }
 
@@ -22,16 +22,16 @@ impl Eq for VariantCode {
 
 #[allow(dead_code)]
 impl VariantCode {
-    pub(crate) fn zero() -> VariantCode {
+    pub fn zero() -> VariantCode {
         VariantCode::new()
     }
-    pub(crate) fn new() -> VariantCode {
+    pub fn new() -> VariantCode {
         VariantCode { value: 0 }
     }
-    pub(crate) fn get(_value: i16) -> VariantCode {
+    pub fn get(_value: i16) -> VariantCode {
         VariantCode { value: _value }
     }
-    fn get_value(&self) -> i16 {
+    pub fn get_value(&self) -> i16 {
         self.value
     }
 }

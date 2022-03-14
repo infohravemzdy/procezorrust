@@ -16,7 +16,7 @@ use crate::service_types::article_term::ArticleTerm;
 use crate::service_types::contract_term::ArcContractTermList;
 use crate::service_types::position_term::ArcPositionTermList;
 
-pub(crate) trait IServiceProcezor {
+pub trait IServiceProcezor {
     fn builder_order(&self) -> &Vec<ArticleTerm>;
     fn builder_paths(&self) -> &HashMap<ArticleTerm, Vec<ArticleDefine>>;
 
@@ -28,7 +28,7 @@ pub(crate) trait IServiceProcezor {
     fn init_with_period(&mut self, _period: &dyn IPeriod) -> bool;
 }
 
-pub(crate) struct ServiceProcezor {
+pub struct ServiceProcezor {
     version: VersionCode,
     calc_articles: Vec<ArticleCode>,
     article_factory: Box<dyn IArticleSpecFactory>,
@@ -109,7 +109,7 @@ type ConceptFactoryFunc = fn() -> Box<dyn IConceptSpecFactory>;
 
 #[allow(dead_code)]
 impl ServiceProcezor {
-    pub(crate) fn new(_version: i32, _calc_arts: &Vec<ArticleCode>,
+    pub fn new(_version: i32, _calc_arts: &Vec<ArticleCode>,
                       article_build_func: ArticleFactoryFunc,
                       concept_build_func: ConceptFactoryFunc) -> ServiceProcezor {
         ServiceProcezor{

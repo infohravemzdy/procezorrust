@@ -87,7 +87,7 @@ impl NotFoundArticleProvider {
     }
 }
 
-pub(crate) struct ProviderRecord {
+pub struct ProviderRecord {
     article: i32,
     sequens: i16,
     concept: i32,
@@ -105,13 +105,13 @@ impl ProviderRecord {
     }
 }
 
-pub(crate) trait IArticleSpecFactory {
+pub trait IArticleSpecFactory {
     fn get_spec(&self, code: &ArticleCode, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec;
     fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<ArcArticleSpec>;
 }
 pub(crate) type BoxArticleSpecFactory = Box<dyn IArticleSpecFactory>;
 
-pub(crate) struct ArticleSpecFactory {
+pub struct ArticleSpecFactory {
     not_found_provider: BoxArticleSpecProvider,
     providers: HashMap<MapArticleCode, BoxArticleSpecProvider>,
 }
@@ -132,10 +132,10 @@ impl IArticleSpecFactory for ArticleSpecFactory {
     }
 }
 
-type ArticleBuildFunc = fn() -> Vec<BoxArticleSpecProvider>;
+pub type ArticleBuildFunc = fn() -> Vec<BoxArticleSpecProvider>;
 
 impl ArticleSpecFactory {
-    pub(crate) fn new(build_func: ArticleBuildFunc) -> ArticleSpecFactory {
+    pub fn new(build_func: ArticleBuildFunc) -> ArticleSpecFactory {
         ArticleSpecFactory {
             not_found_provider: Box::new(NotFoundArticleProvider::new()),
             providers: build_func().into_iter().map(|x| (x.get_code().value, x)).collect()
@@ -151,7 +151,7 @@ impl ArticleSpecFactory {
         Some(val_provider)
     }
 
-    pub(crate) fn build_providers_from_records(records: Vec<ProviderRecord>) -> Vec<BoxArticleSpecProvider> {
+    pub fn build_providers_from_records(records: Vec<ProviderRecord>) -> Vec<BoxArticleSpecProvider> {
         let providers: Vec<BoxArticleSpecProvider> = records.into_iter()
             .map(|x| Box::new(ArticleProviderConfig::new(x.article, x.sequens, x.concept, x.sums)) as BoxArticleSpecProvider).collect();
 

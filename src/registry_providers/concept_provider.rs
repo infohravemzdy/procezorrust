@@ -17,7 +17,7 @@ use crate::service_types::variant_code::VariantCode;
 
 pub(crate) type ResultFunc = fn(target: ArcTermTarget, _spec: ArcArticleSpec, _period: &dyn IPeriod, _ruleset: &dyn IBundleProps, _results: &ResultArcTermResultList) -> ResultArcTermResultList;
 
-pub(crate) trait IConceptSpec: IConceptDefine {
+pub trait IConceptSpec: IConceptDefine {
     fn get_path(&self) -> Vec<ArticleCode>;
     fn get_result_delegate(&self) -> Option<ResultFunc>;
     fn default_target_list(&self, article: &ArticleCode, period: &dyn IPeriod, _ruleset: &dyn IBundleProps, month: &MonthCode,
@@ -32,7 +32,7 @@ pub(crate) trait IConceptSpecConst {
 pub(crate) type BoxConceptSpec = Box<dyn IConceptSpec>;
 
 #[derive(Clone)]
-pub(crate) struct ConceptSpec {
+pub struct ConceptSpec {
     code: ConceptCode,
     path: Vec<ArticleCode>,
     result_delegate: Option<ResultFunc>,
@@ -68,7 +68,7 @@ impl IConceptSpec for ConceptSpec {
 
 #[allow(dead_code)]
 impl ConceptSpec {
-    pub(crate) fn new(_code: ConceptCode, _path: Vec<ArticleCode>, _result: Option<ResultFunc>) -> ConceptSpec {
+    pub fn new(_code: ConceptCode, _path: Vec<ArticleCode>, _result: Option<ResultFunc>) -> ConceptSpec {
         ConceptSpec {
             code: _code,
             path: _path.to_vec(),
@@ -84,12 +84,12 @@ impl ConceptSpec {
     }
 }
 
-pub(crate) trait IConceptSpecProvider {
+pub trait IConceptSpecProvider {
     fn get_code(&self) -> ConceptCode;
     fn get_spec(&self, period: &dyn IPeriod, version: &VersionCode) -> BoxConceptSpec;
 }
 
-pub(crate) struct ConceptSpecProvider {
+pub struct ConceptSpecProvider {
     code: ConceptCode,
 }
 
@@ -104,7 +104,7 @@ impl IConceptSpecProvider for ConceptSpecProvider {
 }
 
 impl ConceptSpecProvider {
-    pub(crate) fn new(_code: ConceptCode) -> ConceptSpecProvider {
+    pub fn new(_code: ConceptCode) -> ConceptSpecProvider {
         ConceptSpecProvider {
             code: _code,
         }

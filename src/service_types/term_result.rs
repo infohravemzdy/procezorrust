@@ -10,7 +10,7 @@ use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::{ArcTermTarget};
 use crate::service_errors::term_result_error::TermResultError;
 
-pub(crate) trait ITermResult : ITermSymbol {
+pub trait ITermResult : ITermSymbol {
     fn get_target(&self) -> ArcTermTarget;
     fn get_spec(&self) -> ArcArticleSpec;
     fn get_concept(&self) -> ConceptCode;
@@ -23,7 +23,7 @@ pub(crate) type ResultArcTermResult = Result<ArcTermResult, TermResultError>;
 
 pub(crate) type ResultArcTermResultList = Vec<ResultArcTermResult>;
 
-pub(crate) struct TermResult {
+pub struct TermResult {
     target: ArcTermTarget,
     spec : ArcArticleSpec,
     month_code: MonthCode,
@@ -81,7 +81,7 @@ impl ITermResult for TermResult {
 }
 
 impl TermResult {
-    pub(crate) fn new(_target: ArcTermTarget, _spec: ArcArticleSpec) -> TermResult {
+    pub fn new(_target: ArcTermTarget, _spec: ArcArticleSpec) -> TermResult {
         let _month: MonthCode = _target.get_month_code().clone();
         let _contract: ContractCode = _target.get_contract().clone();
         let _position: PositionCode = _target.get_position().clone();

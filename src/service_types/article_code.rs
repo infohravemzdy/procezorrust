@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct ArticleCode {
+pub struct ArticleCode {
     pub(crate) value: i32
 }
 
@@ -22,19 +22,19 @@ impl Eq for ArticleCode {
 
 #[allow(dead_code)]
 impl ArticleCode {
-    pub(crate) fn zero() -> ArticleCode {
+    pub fn zero() -> ArticleCode {
         ArticleCode::new()
     }
-    pub(crate) fn new() -> ArticleCode {
+    pub fn new() -> ArticleCode {
         ArticleCode { value: 0 }
     }
-    pub(crate) fn get(_value: i32) -> ArticleCode {
+    pub fn get(_value: i32) -> ArticleCode {
         ArticleCode { value: _value }
     }
-    pub(crate) fn from_code(_code: &ArticleCode) -> ArticleCode {
+    pub fn from_code(_code: &ArticleCode) -> ArticleCode {
         ArticleCode { value: _code.get_value() }
     }
-    pub(crate) fn get_value(&self) -> i32 {
+    pub fn get_value(&self) -> i32 {
         self.value
     }
 }

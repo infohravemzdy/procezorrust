@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct MonthCode {
+pub struct MonthCode {
     value: i32
 }
 
@@ -22,16 +22,16 @@ impl Eq for MonthCode {
 
 #[allow(dead_code)]
 impl MonthCode {
-    pub(crate) fn zero() -> MonthCode {
+    pub fn zero() -> MonthCode {
         MonthCode::new()
     }
-    pub(crate) fn new() -> MonthCode {
+    pub fn new() -> MonthCode {
         MonthCode { value: 0 }
     }
-    pub(crate) fn get(_value: i32) -> MonthCode {
+    pub fn get(_value: i32) -> MonthCode {
         MonthCode { value: _value }
     }
-    fn get_value(&self) -> i32 {
+    pub fn get_value(&self) -> i32 {
         self.value
     }
 }

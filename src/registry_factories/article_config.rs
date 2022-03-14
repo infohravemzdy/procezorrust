@@ -9,7 +9,7 @@ use crate::service_types::article_seqs::ArticleSeqs;
 use crate::service_types::article_term::ArticleTerm;
 
 #[derive(Debug, Clone)]
-pub(crate) struct ArticleSpecConfig {
+pub struct ArticleSpecConfig {
     spec: ArticleSpec,
 }
 
@@ -40,7 +40,7 @@ impl IArticleSpec for ArticleSpecConfig {
 
 #[allow(dead_code)]
 impl ArticleSpecConfig {
-    fn new(_code: i32, _seqs: i16, _role: i32, _sums: Vec<i32>) -> ArticleSpecConfig {
+    pub fn new(_code: i32, _seqs: i16, _role: i32, _sums: Vec<i32>) -> ArticleSpecConfig {
         ArticleSpecConfig {
             spec: ArticleSpec::new(ArticleCode::get(_code),
                                    ArticleSeqs::get(_seqs),
@@ -53,14 +53,14 @@ impl ArticleSpecConfig {
     }
 }
 
-pub(crate) struct ArticleProviderConfig {
+pub struct ArticleProviderConfig {
     spec: ArticleSpecProvider,
     article_spec: ArticleSpecConfig,
 }
 
 #[allow(dead_code)]
 impl ArticleProviderConfig {
-    pub(crate) fn new(article: i32, sequens: i16, concept: i32, sums: Vec<i32>) -> ArticleProviderConfig {
+    pub fn new(article: i32, sequens: i16, concept: i32, sums: Vec<i32>) -> ArticleProviderConfig {
         ArticleProviderConfig {
             spec: ArticleSpecProvider::new(ArticleCode::get(article)),
             article_spec: ArticleSpecConfig::new(article, sequens, concept, sums.to_vec()),

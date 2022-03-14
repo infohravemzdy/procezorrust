@@ -5,7 +5,7 @@ use crate::service_types::contract_code::ContractCode;
 use crate::service_types::contract_term::{ContractTerm, IContractTerm};
 use crate::service_types::position_code::PositionCode;
 
-pub(crate) trait IPositionTerm {
+pub trait IPositionTerm {
     fn get_contract(&self) -> ContractCode;
     fn get_position(&self) -> PositionCode;
     fn get_base_term(&self) -> Box<dyn IContractTerm>;
@@ -18,7 +18,7 @@ pub(crate) trait IPositionTerm {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct PositionTerm {
+pub struct PositionTerm {
     contract: ContractCode,
     position: PositionCode,
     base_term: ContractTerm,

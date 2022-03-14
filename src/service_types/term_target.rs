@@ -7,7 +7,7 @@ use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
 use crate::service_types::term_symbol::ITermSymbol;
 
-pub(crate) trait ITermTarget : ITermSymbol {
+pub trait ITermTarget : ITermSymbol {
     fn get_concept(&self) -> ConceptCode;
     fn get_concept_descr(&self) -> String;
 }
@@ -17,7 +17,7 @@ pub(crate) type ArcTermTarget = Arc<dyn ITermTarget>;
 pub(crate) type ArcTermTargetList = Vec<ArcTermTarget>;
 
 #[derive(Debug, Clone)]
-pub(crate) struct TermTarget {
+pub struct TermTarget {
     month_code: MonthCode,
     contract: ContractCode,
     position: PositionCode,
@@ -68,7 +68,7 @@ impl ITermTarget for TermTarget {
 
 #[allow(dead_code)]
 impl TermTarget {
-    pub(crate) fn new(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
+    pub fn new(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
                       article: &ArticleCode, concept: &ConceptCode) -> TermTarget {
         TermTarget {
             month_code: month.clone(),
@@ -79,11 +79,11 @@ impl TermTarget {
             concept: concept.clone(),
         }
     }
-    pub(crate) fn zero_value(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
+    pub fn zero_value(month: &MonthCode, contract: &ContractCode, position: &PositionCode, variant: &VariantCode,
                       article: &ArticleCode, concept: &ConceptCode) -> TermTarget {
         TermTarget::new(month, contract, position, variant, article, concept)
     }
-    pub(crate) fn from_target(target: &ArcTermTarget) -> TermTarget {
+    pub fn from_target(target: &ArcTermTarget) -> TermTarget {
         TermTarget::new(&target.get_month_code(),
                         &target.get_contract(),
                         &target.get_position(),

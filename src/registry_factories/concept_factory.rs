@@ -76,14 +76,14 @@ impl IConceptSpecProvider for NotFoundConceptProvider {
     }
 }
 
-pub(crate) trait IConceptSpecFactory {
+pub trait IConceptSpecFactory {
     fn get_spec(&self, code: &ConceptCode, period: &dyn IPeriod, version: &VersionCode) -> BoxConceptSpec;
     fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<BoxConceptSpec>;
 }
 
-pub(crate) type BoxConceptSpecFactory = Box<dyn IConceptSpecFactory>;
+pub type BoxConceptSpecFactory = Box<dyn IConceptSpecFactory>;
 
-pub(crate) struct ConceptSpecFactory {
+pub struct ConceptSpecFactory {
     not_found_provider: BoxConceptSpecProvider,
     providers: HashMap<MapConceptCode, BoxConceptSpecProvider>,
 }
@@ -102,10 +102,10 @@ impl IConceptSpecFactory for ConceptSpecFactory {
     }
 }
 
-type ConceptBuildFunc = fn() -> Vec<BoxConceptSpecProvider>;
+pub type ConceptBuildFunc = fn() -> Vec<BoxConceptSpecProvider>;
 
 impl ConceptSpecFactory {
-    pub(crate) fn new(build_func: ConceptBuildFunc) -> ConceptSpecFactory {
+    pub fn new(build_func: ConceptBuildFunc) -> ConceptSpecFactory {
         ConceptSpecFactory {
             not_found_provider: Box::new(NotFoundConceptProvider::new()),
             providers: build_func().into_iter().map(|x| (x.get_code().value, x)).collect()

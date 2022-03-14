@@ -3,7 +3,7 @@ use crate::service_types::article_code::ArticleCode;
 use crate::service_types::article_seqs::ArticleSeqs;
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct ArticleTerm {
+pub struct ArticleTerm {
     pub(crate) code: ArticleCode,
     pub(crate) seqs: ArticleSeqs,
 }

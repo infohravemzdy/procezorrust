@@ -4,7 +4,7 @@ use crate::service_types::month_code::MonthCode;
 use crate::service_types::position_code::PositionCode;
 use crate::service_types::variant_code::VariantCode;
 
-pub(crate) trait ITermSymbol {
+pub trait ITermSymbol {
     fn is_null(&self) -> bool;
     fn get_month_code(&self) -> MonthCode;
     fn get_contract(&self) -> ContractCode;

@@ -12,7 +12,7 @@ pub(crate) trait IArticleSpecConst {
     const CONCEPT_CODE: i32;
 }
 
-pub(crate) trait IArticleSpec : IArticleDefine {
+pub trait IArticleSpec : IArticleDefine {
     fn get_sums(&self) -> Vec<ArticleCode>;
     fn get_defs(&self) -> ArticleDefine;
 }
@@ -21,7 +21,7 @@ pub(crate) type ArcArticleSpec = Arc<dyn IArticleSpec>;
 pub(crate) type ArcArticleSpecList = Vec<ArcArticleSpec>;
 
 #[derive(Debug, Clone)]
-pub(crate) struct ArticleSpec {
+pub struct ArticleSpec {
     pub(crate) code: ArticleCode,
     pub(crate) seqs: ArticleSeqs,
     pub(crate) role: ConceptCode,
@@ -30,7 +30,7 @@ pub(crate) struct ArticleSpec {
 
 #[allow(dead_code)]
 impl ArticleSpec {
-    pub(crate) fn new(_code: ArticleCode, _seqs: ArticleSeqs, _role: ConceptCode, _sums: Vec<ArticleCode>) -> ArticleSpec {
+    pub fn new(_code: ArticleCode, _seqs: ArticleSeqs, _role: ConceptCode, _sums: Vec<ArticleCode>) -> ArticleSpec {
         ArticleSpec {
             code: _code,
             seqs: _seqs,
@@ -76,14 +76,14 @@ pub(crate) trait IArticleProvConst {
     const ARTICLE_CODE: i32;
 }
 
-pub(crate) trait IArticleSpecProvider {
+pub trait IArticleSpecProvider {
     fn get_code(&self) -> ArticleCode;
     fn get_spec(&self, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec;
 }
 
 pub(crate) type BoxArticleSpecProvider = Box<dyn IArticleSpecProvider>;
 
-pub(crate) struct ArticleSpecProvider {
+pub struct ArticleSpecProvider {
     pub(crate) code: ArticleCode,
 }
 
@@ -99,7 +99,7 @@ impl IArticleSpecProvider for ArticleSpecProvider {
 }
 
 impl ArticleSpecProvider {
-    pub(crate) fn new(_code: ArticleCode) -> ArticleSpecProvider {
+    pub fn new(_code: ArticleCode) -> ArticleSpecProvider {
         ArticleSpecProvider {
             code: _code,
         }

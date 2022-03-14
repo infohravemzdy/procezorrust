@@ -3,7 +3,7 @@ use chrono::{NaiveDate};
 use crate::registry_constants::term_constants::{ITermConstants, TermConstants};
 use crate::service_types::contract_code::ContractCode;
 
-pub(crate) trait IContractTerm {
+pub trait IContractTerm {
     fn get_contract(&self) -> ContractCode;
     fn get_date_from(&self) -> NaiveDate;
     fn get_date_stop(&self) -> NaiveDate;
@@ -18,7 +18,7 @@ pub(crate) type ArcContractTerm = Arc<dyn IContractTerm>;
 pub(crate) type ArcContractTermList = Vec<ArcContractTerm>;
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct ContractTerm {
+pub struct ContractTerm {
     contract: ContractCode,
     date_from: NaiveDate,
     date_stop: NaiveDate,

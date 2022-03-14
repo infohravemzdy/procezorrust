@@ -9,7 +9,7 @@ use crate::service_types::variant_code::VariantCode;
 use crate::service_types::term_symbol::ITermSymbol;
 use crate::service_types::term_target::{ArcTermTarget, ITermTarget};
 
-pub(crate) struct TermResultError {
+pub struct TermResultError {
     message: String,
     target: ArcTermTarget,
     period: Period,

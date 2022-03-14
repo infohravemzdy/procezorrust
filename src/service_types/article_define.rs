@@ -3,7 +3,7 @@ use crate::service_types::article_seqs::ArticleSeqs;
 use crate::service_types::article_term::ArticleTerm;
 use crate::service_types::concept_code::ConceptCode;
 
-pub(crate) trait IArticleDefine {
+pub trait IArticleDefine {
     fn get_code(&self) -> ArticleCode;
     fn get_seqs(&self) -> ArticleSeqs;
     fn get_role(&self) -> ConceptCode;
@@ -11,7 +11,7 @@ pub(crate) trait IArticleDefine {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct ArticleDefine {
+pub struct ArticleDefine {
     code: ArticleCode,
     seqs: ArticleSeqs,
     role: ConceptCode,
@@ -31,7 +31,7 @@ impl IArticleDefine for ArticleDefine {
 }
 
 impl ArticleDefine {
-    pub(crate) fn new() -> ArticleDefine {
+    pub fn new() -> ArticleDefine {
         ArticleDefine { code: ArticleCode::new(), seqs: ArticleSeqs::new(), role: ConceptCode::new() }
     }
     pub fn get(_code: i32, _seqs: i16, _role: i32) -> ArticleDefine {
