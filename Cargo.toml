@@ -1,6 +1,6 @@
 [package]
 name = "procezor"
-version = "0.22.1"
+version = "0.22.2"
 edition = "2018"
 description = "Salary, Health, Social, Taxing Properties for years 2011-2022"
 documentation = "https://mzdyhrave.github.io/payrolldocs/"
