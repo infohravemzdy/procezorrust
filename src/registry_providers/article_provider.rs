@@ -17,8 +17,8 @@ pub trait IArticleSpec : IArticleDefine {
     fn get_defs(&self) -> ArticleDefine;
 }
 
-pub(crate) type ArcArticleSpec = Arc<dyn IArticleSpec>;
-pub(crate) type ArcArticleSpecList = Vec<ArcArticleSpec>;
+pub type ArcArticleSpec = Arc<dyn IArticleSpec>;
+pub type ArcArticleSpecList = Vec<ArcArticleSpec>;
 
 #[derive(Debug, Clone)]
 pub struct ArticleSpec {
@@ -81,7 +81,7 @@ pub trait IArticleSpecProvider {
     fn get_spec(&self, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec;
 }
 
-pub(crate) type BoxArticleSpecProvider = Box<dyn IArticleSpecProvider>;
+pub type BoxArticleSpecProvider = Box<dyn IArticleSpecProvider>;
 
 pub struct ArticleSpecProvider {
     pub(crate) code: ArticleCode,

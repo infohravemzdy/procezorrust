@@ -29,7 +29,7 @@ pub(crate) trait IConceptSpecConst {
     const CONCEPT_CODE: i32;
 }
 
-pub(crate) type BoxConceptSpec = Box<dyn IConceptSpec>;
+pub type BoxConceptSpec = Box<dyn IConceptSpec>;
 
 #[derive(Clone)]
 pub struct ConceptSpec {
@@ -111,7 +111,7 @@ impl ConceptSpecProvider {
     }
 }
 
-pub(crate) type BoxConceptSpecProvider = Box<dyn IConceptSpecProvider>;
+pub type BoxConceptSpecProvider = Box<dyn IConceptSpecProvider>;
 
 #[macro_export]
 macro_rules! impl_concept_spec {

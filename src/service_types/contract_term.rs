@@ -13,9 +13,9 @@ pub trait IContractTerm {
     fn is_active(&self) -> bool;
 }
 
-pub(crate) type ArcContractTerm = Arc<dyn IContractTerm>;
+pub type ArcContractTerm = Arc<dyn IContractTerm>;
 
-pub(crate) type ArcContractTermList = Vec<ArcContractTerm>;
+pub type ArcContractTermList = Vec<ArcContractTerm>;
 
 #[derive(Debug, Copy, Clone)]
 pub struct ContractTerm {

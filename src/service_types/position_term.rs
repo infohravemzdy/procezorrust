@@ -28,9 +28,9 @@ pub struct PositionTerm {
     term_day_stop: i8,
 }
 
-pub(crate) type ArcPositionTerm = Arc<dyn IPositionTerm>;
+pub type ArcPositionTerm = Arc<dyn IPositionTerm>;
 
-pub(crate) type ArcPositionTermList = Vec<ArcPositionTerm>;
+pub type ArcPositionTermList = Vec<ArcPositionTerm>;
 
 
 impl PositionTerm {

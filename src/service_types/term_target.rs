@@ -12,9 +12,9 @@ pub trait ITermTarget : ITermSymbol {
     fn get_concept_descr(&self) -> String;
 }
 
-pub(crate) type ArcTermTarget = Arc<dyn ITermTarget>;
+pub type ArcTermTarget = Arc<dyn ITermTarget>;
 
-pub(crate) type ArcTermTargetList = Vec<ArcTermTarget>;
+pub type ArcTermTargetList = Vec<ArcTermTarget>;
 
 #[derive(Debug, Clone)]
 pub struct TermTarget {

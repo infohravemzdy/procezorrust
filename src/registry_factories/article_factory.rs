@@ -109,7 +109,7 @@ pub trait IArticleSpecFactory {
     fn get_spec(&self, code: &ArticleCode, period: &dyn IPeriod, version: &VersionCode) -> ArcArticleSpec;
     fn get_spec_list(&self, period: &dyn IPeriod, version: &VersionCode) -> Vec<ArcArticleSpec>;
 }
-pub(crate) type BoxArticleSpecFactory = Box<dyn IArticleSpecFactory>;
+pub type BoxArticleSpecFactory = Box<dyn IArticleSpecFactory>;
 
 pub struct ArticleSpecFactory {
     not_found_provider: BoxArticleSpecProvider,

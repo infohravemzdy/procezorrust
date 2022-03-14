@@ -17,11 +17,11 @@ pub trait ITermResult : ITermSymbol {
     fn get_concept_descr(&self) -> String;
 }
 
-pub(crate) type ArcTermResult = Arc<dyn ITermResult>;
+pub type ArcTermResult = Arc<dyn ITermResult>;
 
-pub(crate) type ResultArcTermResult = Result<ArcTermResult, TermResultError>;
+pub type ResultArcTermResult = Result<ArcTermResult, TermResultError>;
 
-pub(crate) type ResultArcTermResultList = Vec<ResultArcTermResult>;
+pub type ResultArcTermResultList = Vec<ResultArcTermResult>;
 
 pub struct TermResult {
     target: ArcTermTarget,
